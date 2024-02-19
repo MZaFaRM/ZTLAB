@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Align children vertically
 
     borderBottomWidth: 2, // Border width
-    borderBottomColor: '#d3d3d3', // Border color
+    borderBottomColor: Colors.LightGrey, // Border color
 
     paddingHorizontal: 25, // Add horizontal padding
   },
