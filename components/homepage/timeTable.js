@@ -1,8 +1,8 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
+import Icon from '../icons';
 
 export default function TimeTable() {
   return (
@@ -18,17 +18,23 @@ export default function TimeTable() {
         <TouchableOpacity
           onPress={() => {}}
           style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>T</Text>
+          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
+            T
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {}}
           style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>W</Text>
+          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
+            W
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {}}
           style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>T</Text>
+          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
+            T
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {}}
@@ -46,11 +52,14 @@ export default function TimeTable() {
         <TouchableOpacity
           onPress={() => {}}
           style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>S</Text>
+          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
+            S
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.Period}>
-        <FontAwesome6
+        <Icon
+          type="FontAwesome6"
           name="caret-left"
           size={15}
           color={Colors.Blue}
@@ -69,7 +78,8 @@ export default function TimeTable() {
             </Text>
           </View>
         </View>
-        <FontAwesome6
+        <Icon
+          type="FontAwesome6"
           name="caret-right"
           size={15}
           color={Colors.Blue}
@@ -88,7 +98,6 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   TimeTable: {
-    marginTop: 20,
     alignItems: 'center',
   },
   Days: {

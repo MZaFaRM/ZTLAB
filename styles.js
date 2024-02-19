@@ -7,7 +7,8 @@ export default AppStyles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     width: '100%',
-    padding: 20,
+    padding: 15,
+    marginTop: 20,
   },
   BlueButton: {
     backgroundColor: Colors.White,
@@ -24,5 +25,16 @@ export default AppStyles = StyleSheet.create({
     borderRadius: 10,
     width: 125,
     padding: 10,
+  },
+  FlexBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  FlexLeft: {
+    flex: 1,
+  },
+  FlexRight: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
 });

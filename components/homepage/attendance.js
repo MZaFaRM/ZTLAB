@@ -1,14 +1,13 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
 
 import {ProgressBar, calculateColor} from '../progressbar';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Icon from '../icons';
 
 export default function OverallAttendance() {
-  let attendance = 75;
+  let attendance = 80;
 
   if (attendance > 100) {
     attendance = 100;
@@ -18,10 +17,11 @@ export default function OverallAttendance() {
 
   return (
     <View style={[AppStyles.Box, styles.attendanceBox]}>
-      <View style={styles.FlexBox}>
-        <View style={styles.FlexLeft}>
+      <View style={AppStyles.FlexBox}>
+        <View style={AppStyles.FlexLeft}>
           <View style={styles.Title}>
-            <MaterialCommunityIcons
+            <Icon
+              type="MaterialCommunityIcons"
               name="account-check"
               size={20}
               color={Colors.Grey}
@@ -45,8 +45,17 @@ export default function OverallAttendance() {
           <View>
             <TouchableOpacity
               onPress={() => {}}
-              style={[AppStyles.BlueButton, AppStyles.CustomButton, styles.SubjectWise]}>
-              <FontAwesome5 name="clipboard" size={15} color={Colors.Blue} />
+              style={[
+                AppStyles.BlueButton,
+                AppStyles.CustomButton,
+                styles.SubjectWise,
+              ]}>
+              <Icon
+                type="FontAwesome5"
+                name="clipboard"
+                size={15}
+                color={Colors.Blue}
+              />
               <Text style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 5}]}>
                 Subject wise
               </Text>
@@ -60,9 +69,7 @@ export default function OverallAttendance() {
 }
 
 const styles = StyleSheet.create({
-  attendanceBox: {
-    marginTop: 20,
-  },
+  attendanceBox: {},
   Title: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -76,18 +83,7 @@ const styles = StyleSheet.create({
     width: 125,
     padding: 10,
   },
-  FlexBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  FlexLeft: {
-    flex: 1,
-  },
-  FlexRight: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
   SubjectWise: {
-    height: 40
-  }
+    height: 40,
+  },
 });

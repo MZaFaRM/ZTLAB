@@ -15,9 +15,9 @@ export const Fonts = {
   },
   Body: {
     fontFamily: 'Inter',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontSize: 14,
-    color: Colors.Grey,
+    color: Colors.DarkGrey,
   },
   Button: {
     fontFamily: 'Inter',

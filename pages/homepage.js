@@ -1,19 +1,25 @@
-import {React} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { React } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import Entypo from 'react-native-vector-icons/Entypo';
+import { ScrollView } from 'react-native-virtualized-view';
+
 import TimeTable from '../components/homepage/timeTable';
 
-import {Colors} from '../constants/colors';
-import {Fonts} from '../constants/fonts';
+import { Colors } from '../constants/colors';
+import { Fonts } from '../constants/fonts';
 
 import Attendance from '../components/homepage/attendance';
 
+import Menu from '../components/homepage/menu';
 import AppStyles from '../styles';
+
+import Icon from '../components/icons';
 
 export default function Homepage() {
   return (
-    <View style={styles.Homepage}>
+    <ScrollView
+      contentContainerStyle={styles.Homepage}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.Profile}>
         <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
           Muhammed Zafar M M
@@ -37,7 +43,12 @@ export default function Homepage() {
           <TouchableOpacity
             onPress={() => {}}
             style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
-            <Entypo name="bar-graph" size={15} color={Colors.Blue} />
+            <Icon
+              type="Entypo"
+              name="bar-graph"
+              size={15}
+              color={Colors.Blue}
+            />
             <Text style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 5}]}>
               Analysis
             </Text>
@@ -46,7 +57,8 @@ export default function Homepage() {
       </View>
       <TimeTable />
       <Attendance />
-    </View>
+      <Menu />
+    </ScrollView>
   );
 }
 
@@ -74,6 +86,4 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
   },
-
-
 });
