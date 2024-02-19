@@ -1,82 +1,96 @@
-import {React, useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import {React} from 'react';
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-const Header = ({title}) => {
-  const [selectedValue, setSelectedValue] = useState('Option 1');
+import Entypo from 'react-native-vector-icons/Entypo';
+
+import Header from './components/header';
+import {Colors} from './constants/colors';
+import {Fonts} from './constants/fonts';
+
+export default function App() {
+  StatusBar.setBarStyle('dark-content');
+  StatusBar.setBackgroundColor('#FFFFFF'); // Light color, such as white
 
   return (
-    <View style={styles.headerContainer}>
-      <View style={styles.headerRight}>
-        <Image
-          source={require('./assets/images/dp.webp')}
-          style={styles.headerImage}
-        />
-      </View>
-      <View style={[styles.headerLeft, styles.SemesterBox]}>
-        <Text style={styles.headerText}>Semester: </Text>
-        <View style={styles.SemesterPicker}>
-          <Picker
-            selectedValue={selectedValue}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedValue(itemValue)
-            }>
-            <Picker.Item label="Option 1" value="I" />
-            <Picker.Item label="Option 2" value="II" />
-            <Picker.Item label="Option 3" value="III" />
-          </Picker>
+    <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+      <Header />
+      <View style={styles.Homepage}>
+        <View style={styles.Profile}>
+          <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
+            Muhammed Zafar M M
+          </Text>
+          <Text style={[Fonts.Body]}>Computer Science Student 2021</Text>
+          <Text style={[Fonts.Body]}>
+            Roll No :
+            <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}> 34</Text>
+          </Text>
+        </View>
+        <View style={styles.Marks}>
+          <View style={styles.CGPA}>
+            <Text style={Fonts.Body}>CGPA</Text>
+            <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
+          </View>
+          <View style={styles.PrevCGPA}>
+            <Text style={Fonts.Body}>Prev - CGPA</Text>
+            <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
+          </View>
+          <View style={styles.Analysis}>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={[styles.AnalysisButton]}>
+              <Entypo name="bar-graph" size={15} color={Colors.Blue} />
+              <Text style={[Fonts.Body, styles.AnalysisText]}>Analysis</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    width: '100%',
-    height: 60, // Adjust the height as needed
-
-    backgroundColor: 'red',
+  Homepage: {
+    padding: 25,
+    paddingTop: 15,
+  },
+  Profile: {},
+  Marks: {
+    marginTop: 20,
 
     flexDirection: 'row', // Arrange children horizontally
     alignItems: 'center', // Align children vertically
-
-    borderBottomWidth: 3, // Border width
-    borderBottomColor: '#d3d3d3', // Border color
   },
-  headerText: {
-    margin: 10,
-    color: '#d3d3d3', // Choose text color
-    fontSize: 15, // Adjust font size as needed
-    fontWeight: 'normal',
+  Score: {
+    fontSize: 30,
+    color: Colors.Blue,
   },
-  headerImage: {
-    marginLeft: 10,
-
-    width: 40, // Adjust width as needed
-    height: 40, // Adjust height as needed
-    borderRadius: 50,
-  },
-  headerRight: {
+  CGPA: {
     flex: 1,
     alignItems: 'flex-start',
   },
-  headerLeft: {
-    paddingLeft: 10,
-    backgroundColor: 'blue',
+  PrevCGPA: {
     flex: 1,
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
   },
-  SemesterBox: {
-    flexDirection: 'row', // Arrange children horizontally
-    alignItems: 'center', // Align children vertically
+  AnalysisButton: {
+    backgroundColor: Colors.White,
+    padding: 10,
+    borderRadius: 10,
+    width: 125,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  SemesterPicker: {
-    flex: 1,
-    alignItems: 'flex-end',
+  AnalysisText: {
+    color: Colors.Blue,
+    fontWeight: 'bold',
+    marginLeft: 5,
   },
 });
-
-export default function App() {
-  return <Header title="Zafar" />;
-}
