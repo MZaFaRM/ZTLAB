@@ -4,21 +4,22 @@ import {Picker} from '@react-native-picker/picker';
 import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 
-function Header() {
+function Header({profileImg}) {
   const [semester, setSemester] = useState('VIII');
+  console.log(profileImg)
 
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.headerRight}>
+      <View style={styles.headerLeft}>
         <Image
-          source={require('../assets/images/dp.png')}
+          source={{uri: profileImg} || require('../assets/images/dp.png')}
           style={styles.headerImage}
         />
       </View>
       <View style={styles.Semester}>
         <Text style={styles.headerText}>Semester :</Text>
       </View>
-      <View style={[styles.headerLeft, styles.SemesterBox]}>
+      <View style={[styles.headerRight, styles.SemesterBox]}>
         <Text style={[, styles.headerText, styles.boldText]}> {semester}</Text>
         <View style={styles.SemesterPicker}>
           <Picker
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     height: 40, // Adjust height as needed
     borderRadius: 50,
   },
-  headerRight: {
+  headerLeft: {
     flex: 1,
     alignItems: 'flex-start',
   },
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1.4,
     alignItems: 'flex-end',
   },
-  headerLeft: {
+  headerRight: {
     flex: 0.6,
     alignItems: 'flex-start',
     justifyContent: 'flex-end',

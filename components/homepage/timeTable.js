@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
@@ -5,57 +6,45 @@ import AppStyles from '../../styles';
 import Icon from '../icons';
 
 export default function TimeTable() {
+  const [currentDay, setCurrentDay] = useState(new Date().getDay());
+  const dayLabels = ['', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentDay(new Date().getDay());
+    }, 60000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const getDayStyle = dayNumber => {
+    return dayNumber === currentDay
+      ? [styles.SelectedDay, styles.SelectedDayText]
+      : [];
+  };
+
   return (
     <View style={[styles.TimeTable, AppStyles.Box]}>
       <View style={styles.Days}>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Heading2, AppStyles.BlueText, styles.DayText]}>
-            M
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
-            T
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
-            W
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
-            T
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[AppStyles.BlueButton, styles.Circle, styles.SelectedDay]}>
-          <Text
+        {[1, 2, 3, 4, 5, 6].map(dayNumber => (
+          <View
+            key={dayNumber}
             style={[
-              Fonts.Body,
-              AppStyles.BlueText,
-              styles.DayText,
-              styles.SelectedDayText,
+              AppStyles.BlueButton,
+              styles.Circle,
+              ...getDayStyle(dayNumber),
             ]}>
-            F
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[AppStyles.BlueButton, styles.Circle]}>
-          <Text style={[Fonts.Body, AppStyles.BlueText, styles.DayText]}>
-            S
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                Fonts.Body,
+                AppStyles.BlueText,
+                styles.DayText,
+                ...getDayStyle(dayNumber),
+              ]}>
+              {dayLabels[dayNumber]}
+            </Text>
+          </View>
+        ))}
       </View>
       <View style={styles.Period}>
         <Icon

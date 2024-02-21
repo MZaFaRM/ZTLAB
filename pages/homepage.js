@@ -1,64 +1,105 @@
-import { React } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-import { ScrollView } from 'react-native-virtualized-view';
-
-import TimeTable from '../components/homepage/timeTable';
-
-import { Colors } from '../constants/colors';
-import { Fonts } from '../constants/fonts';
-
+import {React, useState, useEffect} from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {ScrollView} from 'react-native-virtualized-view';
+import {getUserInfo} from '../api/info';
 import Attendance from '../components/homepage/attendance';
-
 import Menu from '../components/homepage/menu';
+import TimeTable from '../components/homepage/timeTable';
+import Icon from '../components/icons';
+import Layout from '../components/layout';
+import {Colors} from '../constants/colors';
+import {Fonts} from '../constants/fonts';
 import AppStyles from '../styles';
 
-import Icon from '../components/icons';
-
 export default function Homepage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [username, setUsername] = useState('');
+  const [profilePic, setProfilePic] = useState('');
+  const [department, setDepartment] = useState('');
+  const [year, setYear] = useState('');
+  const [rollNumber, setRollNumber] = useState('');
+  const [attendance, setAttendance] = useState('');
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    getUserInfo().then(response => {
+      const data = response.data;
+      setUsername(data.name);
+      setProfilePic(data.profile_pic);
+      setDepartment(data.department);
+      setYear(data.year);
+      setRollNumber(data.roll_number);
+      setAttendance(data.attendance);
+
+      setIsLoading(false);
+    });
+  }, []);
+
   return (
-    <ScrollView
-      contentContainerStyle={styles.Homepage}
-      showsVerticalScrollIndicator={false}>
-      <View style={styles.Profile}>
-        <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
-          Muhammed Zafar M M
-        </Text>
-        <Text style={[Fonts.Body]}>Computer Science Student 2021</Text>
-        <Text style={[Fonts.Body]}>
-          Roll No :
-          <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}> 34</Text>
-        </Text>
-      </View>
-      <View style={styles.Marks}>
-        <View style={styles.CGPA}>
-          <Text style={Fonts.Body}>CGPA</Text>
-          <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
-        </View>
-        <View style={styles.PrevCGPA}>
-          <Text style={Fonts.Body}>Prev - CGPA</Text>
-          <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
-        </View>
-        <View style={styles.Analysis}>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
-            <Icon
-              type="Entypo"
-              name="bar-graph"
-              size={15}
-              color={Colors.Blue}
-            />
-            <Text style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 5}]}>
-              Analysis
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <TimeTable />
-      <Attendance />
-      <Menu />
-    </ScrollView>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" /> // Render the spinner while isLoading is true
+      ) : (
+        <Layout profileImg={profilePic}>
+          <ScrollView
+            contentContainerStyle={styles.Homepage}
+            showsVerticalScrollIndicator={false}>
+            <View style={styles.Profile}>
+              <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
+                {username}
+              </Text>
+              <Text style={[Fonts.Body]}>
+                {department} {year}
+              </Text>
+              <Text style={[Fonts.Body]}>
+                Roll No :
+                <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}>
+                  {' '}
+                  {rollNumber}
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.Marks}>
+              <View style={styles.CGPA}>
+                <Text style={Fonts.Body}>CGPA</Text>
+                <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
+              </View>
+              <View style={styles.PrevCGPA}>
+                <Text style={Fonts.Body}>Prev - CGPA</Text>
+                <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
+              </View>
+              <View style={styles.Analysis}>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
+                  <Icon
+                    type="Entypo"
+                    name="bar-graph"
+                    size={15}
+                    color={Colors.Blue}
+                  />
+                  <Text
+                    style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 10}]}>
+                    Analysis
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TimeTable />
+            <Attendance attendance={attendance} />
+            <Menu />
+          </ScrollView>
+        </Layout>
+      )}
+    </View>
   );
 }
 

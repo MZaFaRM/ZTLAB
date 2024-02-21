@@ -5,7 +5,7 @@ import {Fonts} from '../constants/fonts';
 import AppStyles from '../styles';
 import Icon from './icons';
 
-const CustomDropdown = ({title, icon, options, type, isLast}) => {
+const CustomDropdown = ({title, icon, options, type, isLast, isFirst}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -24,7 +24,7 @@ const CustomDropdown = ({title, icon, options, type, isLast}) => {
           />
         </View>
         <View style={styles.optionTextContainer}>
-          <Text style={styles.optionTitle}>{item.title}</Text>
+          <Text style={[styles.optionTitle, Fonts.Body]}>{item.title}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -35,6 +35,7 @@ const CustomDropdown = ({title, icon, options, type, isLast}) => {
       <View
         style={[
           styles.MenuContainer,
+          isFirst ? {borderTopEndRadius: 10, borderTopStartRadius: 10} : {},
           isLast ? {borderBottomWidth: 0} : {},
           isOpen
             ? {borderBottomWidth: 0, backgroundColor: Colors.LightBlue}

@@ -3,12 +3,11 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../constants/colors';
 import Icon from './icons';
 
-export default function Footer({currentPage}) {
+export default function Footer({currentPage = 'home'}) {
   const [page, setPage] = useState(currentPage);
 
   useEffect(() => {
     setPage(currentPage);
-    console.log(currentPage);
   }, [currentPage]);
 
   return (

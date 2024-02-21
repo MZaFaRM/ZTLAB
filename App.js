@@ -1,21 +1,27 @@
 import {React} from 'react';
-import {View, StatusBar} from 'react-native';
+import {StatusBar, View} from 'react-native';
 
-import Header from './components/header';
-import Footer from './components/footer';
 import Homepage from './pages/homepage';
+import Loginpage from './pages/loginpage';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import 'react-native-gesture-handler';
+
 
 export default function App() {
   StatusBar.setBarStyle('dark-content');
   StatusBar.setBackgroundColor('#FFFFFF'); // Light color, such as white
-
-  let CurrentPage = 'home';
+  const Stack = createStackNavigator();
 
   return (
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <Header />
-      <Homepage />
-      <Footer currentPage={CurrentPage} />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={Loginpage}  options={{ headerShown: false }}  />
+          <Stack.Screen name="Home" component={Homepage}  options={{ headerShown: false }}  />
+        </Stack.Navigator>
+      </NavigationContainer>
     </View>
-  );
+  );  
 }

@@ -6,8 +6,7 @@ import AppStyles from '../../styles';
 import {ProgressBar, calculateColor} from '../progressbar';
 import Icon from '../icons';
 
-export default function OverallAttendance() {
-  let attendance = 80;
+export default function OverallAttendance({attendance}) {
 
   if (attendance > 100) {
     attendance = 100;
@@ -56,8 +55,8 @@ export default function OverallAttendance() {
                 size={15}
                 color={Colors.Blue}
               />
-              <Text style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 5}]}>
-                Subject wise
+              <Text style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 10}]}>
+                Subject Wise
               </Text>
             </TouchableOpacity>
           </View>
