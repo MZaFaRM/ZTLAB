@@ -3,7 +3,7 @@ import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
 
-import {ProgressBar, calculateColor} from '../progressbar';
+import {ProgressBar, calculateColor} from './components/progressbar';
 import Icon from '../icons';
 
 export default function OverallAttendance({attendance}) {

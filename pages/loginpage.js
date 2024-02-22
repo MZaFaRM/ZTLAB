@@ -22,13 +22,12 @@ export default function Loginpage({navigation}) {
 
     login(username, password).then(response => {
       if (response) {
-        navigation.replace('Home');
+        navigation.replace('Main');
       } else {
         console.log('Login failed');
       }
+      setIsLoading(false);
     });
-
-    setIsLoading(false);
   }
 
   return (
@@ -69,6 +68,7 @@ export default function Loginpage({navigation}) {
           </View>
           <TextInput
             placeholder="Password"
+            secureTextEntry={true}
             placeholderTextColor={Colors.Grey}
             onChangeText={setPassword}
             value={password}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import CustomDropdown from '../menuDropdown';
+import CustomDropdown from './components/menuDropdown';
 import AppStyle from '../../styles';
 
 export default function Menu() {

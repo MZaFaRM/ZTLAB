@@ -1,21 +1,24 @@
 import {useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 
-function Header({profileImg}) {
-  const [semester, setSemester] = useState('VIII');
-  console.log(profileImg)
+function Header({profileImg, navigation}) {
+  const [semester, setSemester] = useState('VI');
 
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.headerLeft}>
+      <TouchableOpacity
+        style={styles.headerLeft}
+        onPress={() => {
+          navigation.openDrawer();
+        }}>
         <Image
-          source={{uri: profileImg} || require('../assets/images/dp.png')}
+          source={{uri: profileImg}}
           style={styles.headerImage}
         />
-      </View>
+      </TouchableOpacity>
       <View style={styles.Semester}>
         <Text style={styles.headerText}>Semester :</Text>
       </View>

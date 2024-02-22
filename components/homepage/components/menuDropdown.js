@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, StyleSheet, Text, FlatList} from 'react-native';
-import {Colors} from '../constants/colors';
-import {Fonts} from '../constants/fonts';
-import AppStyles from '../styles';
-import Icon from './icons';
+import {Colors} from '../../../constants/colors';
+import {Fonts} from '../../../constants/fonts';
+import AppStyles from '../../../styles';
+import Icon from '../../icons';
 
 const CustomDropdown = ({title, icon, options, type, isLast, isFirst}) => {
   const [isOpen, setIsOpen] = useState(false);

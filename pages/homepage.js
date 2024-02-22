@@ -17,7 +17,7 @@ import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 import AppStyles from '../styles';
 
-export default function Homepage() {
+export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
 
   const [username, setUsername] = useState('');
@@ -48,7 +48,7 @@ export default function Homepage() {
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" /> // Render the spinner while isLoading is true
       ) : (
-        <Layout profileImg={profilePic}>
+        <Layout profileImg={profilePic} navigation={navigation}>
           <ScrollView
             contentContainerStyle={styles.Homepage}
             showsVerticalScrollIndicator={false}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../constants/colors';
+import {Colors} from '../../../constants/colors';
 
 function ProgressBar({progress}) {
   progress = progress / 100;

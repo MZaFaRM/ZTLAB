@@ -9,3 +9,13 @@ export const getUserInfo = async () => {
     return response.data;
   }
 };
+
+export const getSidebarUserInfo = async () => {
+  const response = await api.get(`/get-sidebar/`);
+
+  if (response.status !== 200) {
+    throw new Error('Failed to get user info');
+  } else {
+    return response.data;
+  }
+}
