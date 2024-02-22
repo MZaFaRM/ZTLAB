@@ -162,9 +162,9 @@ const styles = StyleSheet.create({
   },
   sourceVersion: {
     flex: 1,
-    justifyContent: 'flex-end', // Align items at the bottom
+    justifyContent: 'center',
     marginTop: 40,
-    minHeight: 100, // Minimum height of 100 units
+    minHeight: 100,
   }
   
 });
