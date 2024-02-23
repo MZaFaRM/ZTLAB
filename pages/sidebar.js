@@ -20,6 +20,9 @@ import { getSidebarUserInfo } from '../api/info';
 import { useNavigation } from '@react-navigation/native';
 
 import { updateHeaders } from '../api/src';
+import { pages } from '../constants/pages';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomDrawerContent = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,6 +46,10 @@ const CustomDrawerContent = props => {
 
       setProfileImg(res.profile_pic);
       setUsername(res.name);
+
+      AsyncStorage.setItem('username', res.name);
+      AsyncStorage.setItem('profile_pic', res.profile_pic);
+
       setUniRegNo(res.uni_reg_no);
       setAdmNo(res.admission_no);
       setMobileNo(res.mobile_no);
@@ -57,7 +64,7 @@ const CustomDrawerContent = props => {
 
   handleLogout = () => {
     updateHeaders("session_id", "");
-    navigation.replace('Login');
+    navigation.replace(pages.login);
   }
 
   return (

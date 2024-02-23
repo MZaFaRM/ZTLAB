@@ -12,43 +12,52 @@ import Attendance from '../components/homepage/attendance';
 import Menu from '../components/homepage/menu';
 import TimeTable from '../components/homepage/timeTable';
 import Icon from '../components/icons';
-import Layout from '../components/layout';
+import Layout from '../components/layout/layout';
 import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 import AppStyles from '../styles';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
 
   const [username, setUsername] = useState('');
-  const [profilePic, setProfilePic] = useState('');
   const [department, setDepartment] = useState('');
   const [year, setYear] = useState('');
   const [rollNumber, setRollNumber] = useState('');
   const [attendance, setAttendance] = useState('');
 
   useEffect(() => {
-    setIsLoading(true);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getUserInfo();
+        const data = response.data;
 
-    getUserInfo().then(response => {
-      const data = response.data;
-      setUsername(data.name);
-      setProfilePic(data.profile_pic);
-      setDepartment(data.department);
-      setYear(data.year);
-      setRollNumber(data.roll_number);
-      setAttendance(data.attendance);
-
-      setIsLoading(false);
-    });
+        setUsername(await AsyncStorage.getItem('username'));
+        
+        setDepartment(data.department);
+        setYear(data.year);
+        setRollNumber(data.roll_number);
+        setAttendance(data.attendance);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
   }, []);
+  
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" /> // Render the spinner while isLoading is true
+        <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Layout profileImg={profilePic} navigation={navigation}>
+        <Layout navigation={navigation}>
           <ScrollView
             contentContainerStyle={styles.Homepage}
             showsVerticalScrollIndicator={false}>

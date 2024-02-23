@@ -9,10 +9,15 @@ import CustomDrawerContent from './pages/sidebar';
 // Import your screens
 import Homepage from './pages/homepage';
 import Loginpage from './pages/loginpage';
+import AssignmentsPage from './pages/assignments';
+
+import {pages} from './constants/pages';
+
 import {updateHeaders} from './api/src';
 
 // Additional imports for gesture handler
 import 'react-native-gesture-handler';
+import Layout from './components/layout/layout';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -21,15 +26,18 @@ const Drawer = createDrawerNavigator();
 function MyDrawer() {
   return (
     <Drawer.Navigator
-      initialRouteName="Home"
-      drawerContent={props => <CustomDrawerContent {...props} />}
-      >
+      initialRouteName={pages.home}
+      drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
-        name="Home"
+        name={pages.home}
         component={Homepage}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
-      {/* Add more screens to the drawer as needed */}
+      <Drawer.Screen
+        name={pages.assignments}
+        component={AssignmentsPage}
+        options={{headerShown: true}}
+      />
     </Drawer.Navigator>
   );
 }
@@ -43,10 +51,13 @@ export default function App() {
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={Loginpage} options={{headerShown: false}} />
-          {/* Replace the direct call to Homepage with MyDrawer */}
           <Stack.Screen
-            name="Main"
+            name={pages.login}
+            component={Loginpage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={pages.main}
             component={MyDrawer}
             options={{headerShown: false}}
           />

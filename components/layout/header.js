@@ -1,11 +1,16 @@
 import {useState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import {Colors} from '../constants/colors';
-import {Fonts} from '../constants/fonts';
+import {Colors} from '../../constants/colors';
+import {Fonts} from '../../constants/fonts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Header({profileImg, navigation}) {
+function Header({navigation}) {
   const [semester, setSemester] = useState('VI');
+  
+  AsyncStorage.getItem('profile_pic').then(value => {
+    profile_pic = value;
+  });
 
   return (
     <View style={styles.headerContainer}>
@@ -15,7 +20,7 @@ function Header({profileImg, navigation}) {
           navigation.openDrawer();
         }}>
         <Image
-          source={{uri: profileImg}}
+          source={{uri: profile_pic}}
           style={styles.headerImage}
         />
       </TouchableOpacity>

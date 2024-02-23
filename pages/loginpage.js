@@ -5,11 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import {login} from '../api/auth';
 import Icon from '../components/icons';
 import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
+import { pages } from '../constants/pages';
 
 export default function Loginpage({navigation}) {
   const [username, setUsername] = useState('');
@@ -20,14 +22,18 @@ export default function Loginpage({navigation}) {
   function handleLogin(username, password) {
     setIsLoading(true);
 
-    login(username, password).then(response => {
-      if (response) {
-        navigation.replace('Main');
-      } else {
-        console.log('Login failed');
-      }
-      setIsLoading(false);
-    });
+    login(username, password)
+      .then(response => {
+        if (response) {
+          navigation.replace(pages.main);
+        } else {
+          console.log('Login failed');
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -100,14 +106,18 @@ export default function Loginpage({navigation}) {
             ? {backgroundColor: Colors.Grey}
             : {backgroundColor: Colors.Blue},
         ]}>
-        <TouchableOpacity
-          style={styles.SignInButton}
-          disabled={isLoading}
-          onPress={() => {
-            handleLogin(username, password);
-          }}>
-          <Text style={[Fonts.Body, styles.SignInText]}>Login</Text>
-        </TouchableOpacity>
+        {isLoading ? (
+          <ActivityIndicator style={styles.SignInButton} size="small" color="#fff" />
+        ) : (
+          <TouchableOpacity
+            style={styles.SignInButton}
+            disabled={isLoading}
+            onPress={() => {
+              handleLogin(username, password);
+            }}>
+            <Text style={[Fonts.Body, styles.SignInText]}>Login</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={{Flex: 1, alignItems: 'flex-end', marginTop: 5}}>
           <Text style={Fonts.Body}>Forgot Password?</Text>

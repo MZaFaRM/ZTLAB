@@ -2,10 +2,10 @@ import React from 'react';
 import Header from './header';
 import Footer from './footer';
 
-const Layout = ({children, profileImg, navigation}) => {
-  return (
+const Layout = ({children, navigation}) => {
+  return ( 
     <>
-      <Header profileImg={profileImg} navigation={navigation} />
+      <Header navigation={navigation} />
       {children}
       <Footer />
     </>
