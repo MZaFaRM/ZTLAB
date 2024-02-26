@@ -1,5 +1,12 @@
-import {useState} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
@@ -7,10 +14,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Header({navigation}) {
   const [semester, setSemester] = useState('VI');
-  
-  AsyncStorage.getItem('profile_pic').then(value => {
-    profile_pic = value;
-  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [profilePic, setProfilePic] = useState('');
+
+  useEffect(() => {
+    setIsLoading(true);
+    AsyncStorage.getItem('profile_pic').then(value => {
+      setProfilePic(value);
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
     <View style={styles.headerContainer}>
@@ -19,10 +33,11 @@ function Header({navigation}) {
         onPress={() => {
           navigation.openDrawer();
         }}>
-        <Image
-          source={{uri: profile_pic}}
-          style={styles.headerImage}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <Image source={{uri: profilePic}} style={styles.headerImage} />
+        )}
       </TouchableOpacity>
       <View style={styles.Semester}>
         <Text style={styles.headerText}>Semester :</Text>

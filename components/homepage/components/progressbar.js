@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../../constants/colors';
 
-function ProgressBar({progress}) {
+function ProgressBar({progress, style}) {
   progress = progress / 100;
 
   // Calculate color based on progress
@@ -20,7 +20,7 @@ function ProgressBar({progress}) {
   }
 
   return (
-    <View style={{position: 'relative', width: '100%', height: 10}}>
+    <View style={[{position: 'relative', width: '100%', height: 10}, style]}>
       <View
         style={{
           position: 'absolute',

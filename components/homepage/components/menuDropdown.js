@@ -5,7 +5,7 @@ import {Fonts} from '../../../constants/fonts';
 import AppStyles from '../../../styles';
 import Icon from '../../icons';
 
-const CustomDropdown = ({title, icon, options, type, isLast, isFirst}) => {
+const CustomDropdown = ({title, icon, options, type, isLast}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -35,7 +35,6 @@ const CustomDropdown = ({title, icon, options, type, isLast, isFirst}) => {
       <View
         style={[
           styles.MenuContainer,
-          isFirst ? {borderTopEndRadius: 10, borderTopStartRadius: 10} : {},
           isLast ? {borderBottomWidth: 0} : {},
           isOpen
             ? {borderBottomWidth: 0, backgroundColor: Colors.LightBlue}

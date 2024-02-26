@@ -72,7 +72,6 @@ export default function Menu() {
           options={item.options}
           type={item.type}
           isLast={index === dropdownItems.length - 1}
-          isFirst={index === 0}
         />
       ))}
     </View>

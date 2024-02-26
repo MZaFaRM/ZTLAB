@@ -10,6 +10,7 @@ import CustomDrawerContent from './pages/sidebar';
 import Homepage from './pages/homepage';
 import Loginpage from './pages/loginpage';
 import AssignmentsPage from './pages/assignments';
+import SubjectWiseAttendance from './pages/subjectWiseAttendance'
 
 import {pages} from './constants/pages';
 
@@ -31,12 +32,17 @@ function MyDrawer() {
       <Drawer.Screen
         name={pages.home}
         component={Homepage}
-        options={{headerShown: true}}
+        options={{headerShown: false}}
       />
       <Drawer.Screen
         name={pages.assignments}
         component={AssignmentsPage}
-        options={{headerShown: true}}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen
+        name={pages.subjectWiseAttendance}
+        component={SubjectWiseAttendance}
+        options={{headerShown: false}}
       />
     </Drawer.Navigator>
   );
@@ -45,7 +51,7 @@ function MyDrawer() {
 export default function App() {
   StatusBar.setBarStyle('dark-content');
   StatusBar.setBackgroundColor('#FFFFFF'); // Light color, such as white
-  // updateHeaders('session_id', '0f4eb699-0073-490d-a8d8-fa15286b1200');
+  updateHeaders('session_id', '8c5af07d-e83b-40e2-9d57-189a7dd97316');
 
   return (
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>

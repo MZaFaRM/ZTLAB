@@ -2,11 +2,14 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
+import {pages} from '../../constants/pages';
 
 import {ProgressBar, calculateColor} from './components/progressbar';
 import Icon from '../icons';
+import {useNavigation} from '@react-navigation/native';
 
 export default function OverallAttendance({attendance}) {
+  const navigation = useNavigation();
 
   if (attendance > 100) {
     attendance = 100;
@@ -43,7 +46,9 @@ export default function OverallAttendance({attendance}) {
         <View style={styles.FlexRight}>
           <View>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate(pages.subjectWiseAttendance);
+              }}
               style={[
                 AppStyles.BlueButton,
                 AppStyles.CustomButton,

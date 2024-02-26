@@ -16,6 +16,7 @@ import Layout from '../components/layout/layout';
 import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 import AppStyles from '../styles';
+import {pages} from '../constants/pages';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -57,7 +58,7 @@ export default function Homepage({navigation}) {
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Layout navigation={navigation}>
+        <Layout navigation={navigation} currentPage={pages.home}>
           <ScrollView
             contentContainerStyle={styles.Homepage}
             showsVerticalScrollIndicator={false}>
@@ -121,8 +122,8 @@ const styles = StyleSheet.create({
   Marks: {
     marginTop: 20,
 
-    flexDirection: 'row', // Arrange children horizontally
-    alignItems: 'center', // Align children vertically
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   Score: {
     fontSize: 30,

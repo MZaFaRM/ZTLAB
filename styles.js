@@ -9,6 +9,7 @@ export default AppStyles = StyleSheet.create({
     width: '100%',
     padding: 15,
     marginTop: 20,
+    overflow: 'hidden'
   },
   BlueButton: {
     backgroundColor: Colors.White,

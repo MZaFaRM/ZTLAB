@@ -23,6 +23,6 @@ export const Fonts = {
     fontFamily: 'Inter',
     fontWeight: 'normal',
     fontSize: 12,
-    color: Colors.Grey,
+    color: Colors.DarkGrey,
   },
 };
