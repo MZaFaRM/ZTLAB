@@ -9,18 +9,20 @@ import {
 } from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {Fonts} from '../constants/fonts';
-import { Colors } from '../constants/colors';
+import {Colors} from '../constants/colors';
 import {
   ProfileItem,
   SignatureItem,
   GeneralInfo,
 } from '../components/sidebar/sidebar';
 
-import { getSidebarUserInfo } from '../api/info';
-import { useNavigation } from '@react-navigation/native';
+import {getSidebarUserInfo} from '../api/info';
+import {useNavigation} from '@react-navigation/native';
 
-import { updateHeaders } from '../api/src';
-import { pages } from '../constants/pages';
+import {updateHeaders} from '../api/src';
+import {pages} from '../constants/pages';
+
+import {removeAuthToken} from '../services/AuthService';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -63,9 +65,12 @@ const CustomDrawerContent = props => {
   }, []);
 
   handleLogout = () => {
-    updateHeaders("session_id", "");
+    removeAuthToken()
+      .then(() => {})
+      .catch(e => console.log(e));
+    
     navigation.replace(pages.login);
-  }
+  };
 
   return (
     <DrawerContentScrollView {...props} style={styles.Drawer}>
@@ -140,7 +145,7 @@ const CustomDrawerContent = props => {
 const styles = StyleSheet.create({
   Drawer: {
     paddingTop: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   sidebarProfile: {
     marginTop: 20,
@@ -172,8 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 40,
     minHeight: 100,
-  }
-  
+  },
 });
 
 export default CustomDrawerContent;

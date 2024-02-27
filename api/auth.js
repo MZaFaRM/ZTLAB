@@ -1,4 +1,4 @@
-import {api, updateHeaders} from './src';
+import {api} from './src';
 
 export const login = async (username, password) => {
   try {
@@ -8,7 +8,7 @@ export const login = async (username, password) => {
     });
 
     if (response.status !== 200) {
-      throw new Error('Login failed');
+      throw new Error(response.data.error);
     } else {
       return response.data.data;
     }

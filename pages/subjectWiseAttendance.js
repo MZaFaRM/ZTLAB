@@ -1,9 +1,5 @@
 import {React, useState, useEffect} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text} from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import Layout from '../components/layout/layout';
 import {Colors} from '../constants/colors';
@@ -11,7 +7,6 @@ import {Fonts} from '../constants/fonts';
 import {pages} from '../constants/pages';
 import {getSubjectWiseAttendance} from '../api/info';
 import {SubjectBox} from '../components/attendance/subjectBox';
-
 
 const SubjectWiseAttendance = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
@@ -35,7 +30,7 @@ const SubjectWiseAttendance = ({navigation}) => {
         contentContainerStyle={styles.Homepage}
         showsVerticalScrollIndicator={false}>
         <Text
-          style={[Fonts.Heading1, {color: Colors.DarkGrey, marginBottom: 20}]}>
+          style={[Fonts.Heading1, {color: Colors.DarkGrey, marginBottom: 30}]}>
           Attendance
         </Text>
         {isLoading ? (

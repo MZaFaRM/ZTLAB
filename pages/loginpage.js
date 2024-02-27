@@ -13,9 +13,12 @@ import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 import {pages} from '../constants/pages';
 import {updateHeaders} from '../api/src';
-import {storeAuthToken} from '../services/AuthService';
+import {getAuthToken, storeAuthToken} from '../services/AuthService';
+import {useNavigation} from '@react-navigation/native';
 
-export default function Loginpage({navigation}) {
+export default function Loginpage() {
+  const navigation = useNavigation();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [college, setCollege] = useState('');
@@ -27,9 +30,10 @@ export default function Loginpage({navigation}) {
     login(username, password)
       .then(response => {
         if (response) {
+          updateHeaders('session_id', response.session_id);
           storeAuthToken(response.session_id)
             .then(() => {
-              updateHeaders('session_id', response.session_id);
+              console.log('Logged in:', response.session_id);
             })
             .catch(err => {
               console.log('Error logging in:', err);

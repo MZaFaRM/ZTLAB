@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
   },
   SubjectBodyBox: {
     padding: 10,
+    backgroundColor: 'white',
   },
   DutyLeaveBox: {
     alignItems: 'center',
