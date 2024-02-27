@@ -11,7 +11,9 @@ import {login} from '../api/auth';
 import Icon from '../components/icons';
 import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
-import { pages } from '../constants/pages';
+import {pages} from '../constants/pages';
+import {updateHeaders} from '../api/src';
+import {storeAuthToken} from '../services/AuthService';
 
 export default function Loginpage({navigation}) {
   const [username, setUsername] = useState('');
@@ -25,6 +27,15 @@ export default function Loginpage({navigation}) {
     login(username, password)
       .then(response => {
         if (response) {
+          storeAuthToken(response.session_id)
+            .then(() => {
+              updateHeaders('session_id', response.session_id);
+            })
+            .catch(err => {
+              console.log('Error logging in:', err);
+              setIsLoading(false);
+            });
+
           navigation.replace(pages.main);
         } else {
           console.log('Login failed');
@@ -32,6 +43,7 @@ export default function Loginpage({navigation}) {
         setIsLoading(false);
       })
       .catch(err => {
+        console.log('Error logging in:', err);
         setIsLoading(false);
       });
   }
@@ -107,7 +119,11 @@ export default function Loginpage({navigation}) {
             : {backgroundColor: Colors.Blue},
         ]}>
         {isLoading ? (
-          <ActivityIndicator style={styles.SignInButton} size="small" color="#fff" />
+          <ActivityIndicator
+            style={styles.SignInButton}
+            size="small"
+            color="#fff"
+          />
         ) : (
           <TouchableOpacity
             style={styles.SignInButton}

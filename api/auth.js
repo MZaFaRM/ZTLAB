@@ -10,14 +10,10 @@ export const login = async (username, password) => {
     if (response.status !== 200) {
       throw new Error('Login failed');
     } else {
-      console.log(response.data.data.session_id);
-      updateHeaders('session_id', response.data.data.session_id);
-      return true;
+      return response.data.data;
     }
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
   }
 };
-
-
