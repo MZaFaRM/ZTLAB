@@ -3,7 +3,7 @@ import {ActivityIndicator, StatusBar, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import 'react-native-gesture-handler'; // Import at the top
+import 'react-native-gesture-handler'; 
 
 import {getAuthToken, storeAuthToken} from './services/AuthService';
 import {updateHeaders} from './api/src';

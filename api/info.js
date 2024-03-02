@@ -1,42 +1,35 @@
 import {api} from './src';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {InvalidTokenError} from './auth';
+
+const fetchData = async endpoint => {
+  try {
+    const response = await api.get(endpoint);
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 401) {
+      throw new InvalidTokenError('Invalid token');
+    } else {
+      throw new Error(`Failed to fetch data: ${error.response.data.error}`);
+    }
+  }
+};
 
 export const getUserInfo = async () => {
-  const response = await api.get(`/get-details/`);
-
-  if (response.status !== 200) {
-    throw new Error(`Failed to get user info: ${response.data.error}`);
-  } else {
-    return response.data;
-  }
+  return await fetchData(`/get-details/`);
 };
 
 export const getSidebarUserInfo = async () => {
-  const response = await api.get(`/get-sidebar/`);
-
-  if (response.status !== 200) {
-    throw new Error(`Failed to get user info ${response.data.error}`);
-  } else {
-    return response.data;
-  }
+  return await fetchData(`/get-sidebar/`);
 };
 
 export const getAssignmentInfo = async () => {
-  const response = await api.get('/get-assignments/');
-
-  if (response.status !== 200) {
-    throw new Error(`Failed to get assignment info ${response.data.error}`);
-  } else {
-    return response.data;
-  }
+  return await fetchData('/get-assignments/');
 };
 
 export const getSubjectWiseAttendance = async () => {
-  const response = await api.get('/get-attendance/');
+  return await fetchData('/get-attendance/');
+};
 
-  if (response.status !== 200) {
-    throw new Error(`Failed to get attendance info ${response.data.error}`);
-  } else {
-    return response.data;
-  }
+export const getTimeTable = async day => {
+  return await fetchData(`/get-timetable/${day}`);
 };

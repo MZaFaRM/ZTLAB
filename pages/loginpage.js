@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  ScrollView
 } from 'react-native';
 import {login} from '../api/auth';
 import Icon from '../components/icons';
@@ -13,8 +14,9 @@ import {Colors} from '../constants/colors';
 import {Fonts} from '../constants/fonts';
 import {pages} from '../constants/pages';
 import {updateHeaders} from '../api/src';
-import {getAuthToken, storeAuthToken} from '../services/AuthService';
+import {storeAuthToken} from '../services/AuthService';
 import {useNavigation} from '@react-navigation/native';
+import {Picker} from '@react-native-picker/picker';
 
 export default function Loginpage() {
   const navigation = useNavigation();
@@ -71,13 +73,15 @@ export default function Loginpage() {
               color={Colors.DarkGrey}
             />
           </View>
-          <TextInput
-            placeholder="Username"
-            placeholderTextColor={Colors.Grey}
-            onChangeText={setUsername}
-            value={username}
-            style={Fonts.Body}
-          />
+          <View style={{width: '100%'}}>
+            <TextInput
+              placeholder="Username"
+              placeholderTextColor={Colors.Grey}
+              onChangeText={setUsername}
+              value={username}
+              style={[Fonts.Body, {marginRight: 50}]}
+            />
+          </View>
         </View>
         <View style={styles.AuthField}>
           <View style={styles.IconButton}>
@@ -88,14 +92,16 @@ export default function Loginpage() {
               color={Colors.DarkGrey}
             />
           </View>
-          <TextInput
-            placeholder="Password"
-            secureTextEntry={true}
-            placeholderTextColor={Colors.Grey}
-            onChangeText={setPassword}
-            value={password}
-            style={Fonts.Body}
-          />
+          <View style={{width: '100%'}}>
+            <TextInput
+              placeholder="Password"
+              secureTextEntry={true}
+              placeholderTextColor={Colors.Grey}
+              onChangeText={setPassword}
+              value={password}
+              style={[Fonts.Body, {marginRight: 50}]}
+            />
+          </View>
         </View>
         <View style={styles.AuthField}>
           <View style={styles.IconButton}>
@@ -106,13 +112,16 @@ export default function Loginpage() {
               color={Colors.DarkGrey}
             />
           </View>
-          <TextInput
-            placeholder="College"
-            placeholderTextColor={Colors.Grey}
-            onChangeText={setCollege}
-            value={college}
-            style={Fonts.Body}
-          />
+          <View style={{width: '100%'}}>
+            <Picker
+              style={[Fonts.Body, {marginRight: 50, marginLeft: -15}]}
+              selectedValue={college}
+              onValueChange={setCollege}
+              dropdownIconColor={Colors.Blue}
+              mode="dropdown">
+              <Picker.Item label="KMCT College of Engineering" value="kmctce" />
+            </Picker>
+          </View>
         </View>
       </View>
       <View

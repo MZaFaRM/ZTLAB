@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {Fonts} from '../constants/fonts';
@@ -25,6 +26,12 @@ import {pages} from '../constants/pages';
 import {removeAuthToken} from '../services/AuthService';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from '../components/icons';
+
+import AppStyles from '../styles';
+
+import * as ImagePicker from 'react-native-image-picker';
+import {handleUnauthorizedAccess} from '../api/auth';
 
 const CustomDrawerContent = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -40,35 +47,60 @@ const CustomDrawerContent = props => {
 
   const navigation = useNavigation();
 
+  const handleChoosePhoto = () => {
+    const options = {
+      title: 'Select a Photo',
+      cancelButtonTitle: 'Cancel',
+      takePhotoButtonTitle: 'Take Photo...',
+      chooseFromLibraryButtonTitle: 'Choose from Library...',
+      mediaType: 'photo',
+      quality: 1,
+    };
+
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        console.log('ImagePicker Response: ', response.assets[0].uri);
+      }
+    });
+  };
+
   useEffect(() => {
     setIsLoading(true);
 
-    getSidebarUserInfo().then(data => {
-      res = data.data;
+    getSidebarUserInfo()
+      .then(data => {
+        res = data.data;
 
-      setProfileImg(res.profile_pic);
-      setUsername(res.name);
+        setProfileImg(res.profile_pic);
+        setUsername(res.name);
 
-      AsyncStorage.setItem('username', res.name);
-      AsyncStorage.setItem('profile_pic', res.profile_pic);
+        AsyncStorage.setItem('profile_pic', res.profile_pic);
 
-      setUniRegNo(res.uni_reg_no);
-      setAdmNo(res.admission_no);
-      setMobileNo(res.mobile_no);
-      setEmail(res.email);
-      setAcademicYear(res.academic_year);
-      setAddress(res.address);
-      setSign(res.sign);
-
-      setIsLoading(false);
-    });
-  }, []);
+        setUniRegNo(res.uni_reg_no);
+        setAdmNo(res.admission_no);
+        setMobileNo(res.mobile_no);
+        setEmail(res.email);
+        setAcademicYear(res.academic_year);
+        setAddress(res.address);
+        setSign(res.sign);
+      })
+      .catch(e => {
+        handleUnauthorizedAccess(e, navigation);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [profileImg]);
 
   handleLogout = () => {
     removeAuthToken()
       .then(() => {})
       .catch(e => console.log(e));
-    
+
     navigation.replace(pages.login);
   };
 
@@ -79,7 +111,23 @@ const CustomDrawerContent = props => {
       ) : (
         <>
           <View style={styles.drawerHeader}>
-            <Image source={{uri: profileImg}} style={styles.sidebarImg} />
+            <View
+              style={[
+                {
+                  flexDirection: 'row',
+                  alignItems: 'flex-end',
+                },
+              ]}>
+              <View style={styles.sidebarImgBox}>
+                <Image source={{uri: profileImg}} style={styles.sidebarImg} />
+              </View>
+              <TouchableOpacity
+                style={styles.iconBox}
+                onPress={() => handleChoosePhoto()}>
+                <Icon type="Entypo" name="edit" size={14} color={Colors.Grey} />
+              </TouchableOpacity>
+            </View>
+
             <Text style={[Fonts.Heading1, styles.drawerHeaderText]}>
               {username}
             </Text>
@@ -150,10 +198,25 @@ const styles = StyleSheet.create({
   sidebarProfile: {
     marginTop: 20,
   },
+  sidebarImgBox: {
+    height: 80,
+  },
   sidebarImg: {
     aspectRatio: 1,
-    height: '50%',
+    height: '100%',
     borderRadius: 50,
+  },
+  iconBox: {
+    borderRadius: 50,
+    backgroundColor: 'white',
+    right: 20,
+    aspectRatio: 1,
+    width: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowOffset: {width: 0, height: 4},
+    shadowColor: 'black',
   },
   drawerHeader: {
     borderBottomWidth: 1,

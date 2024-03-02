@@ -4,14 +4,20 @@ import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
 import Icon from '../icons';
+import {getTimeTable} from '../../api/info';
 
 export default function TimeTable() {
   const [currentDay, setCurrentDay] = useState(new Date().getDay());
+
   const dayLabels = ['', 'M', 'T', 'W', 'T', 'F', 'S'];
+  let day = new Date().getDay();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentDay(new Date().getDay());
+      day = new Date().getDay();
+      if (day !== currentDay) {
+        setCurrentDay(day);
+      }
     }, 60000);
 
     return () => clearInterval(intervalId);

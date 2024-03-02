@@ -17,3 +17,18 @@ export const login = async (username, password) => {
     throw error;
   }
 };
+
+export const handleUnauthorizedAccess = (error, navigation) => {
+  if (error instanceof InvalidTokenError) {
+    navigation.replace('Login');
+  } else {
+    console.error('Error:', error);
+  }
+};
+
+export class InvalidTokenError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'InvalidTokenError';
+  }
+}

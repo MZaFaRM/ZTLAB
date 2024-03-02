@@ -7,6 +7,7 @@ import {Fonts} from '../constants/fonts';
 import {pages} from '../constants/pages';
 import {getSubjectWiseAttendance} from '../api/info';
 import {SubjectBox} from '../components/attendance/subjectBox';
+import {handleUnauthorizedAccess} from '../api/auth';
 
 const SubjectWiseAttendance = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
@@ -16,10 +17,11 @@ const SubjectWiseAttendance = ({navigation}) => {
     getSubjectWiseAttendance()
       .then(data => {
         setAttendanceData(data.data);
-        setLoading(false);
       })
-      .catch(e => {
-        console.log(e);
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);

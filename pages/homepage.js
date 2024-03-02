@@ -19,6 +19,8 @@ import AppStyles from '../styles';
 import {pages} from '../constants/pages';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {updateHeaders} from '../api/src';
+import {handleUnauthorizedAccess} from '../api/auth';
 
 export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,22 +38,22 @@ export default function Homepage({navigation}) {
         const response = await getUserInfo();
         const data = response.data;
 
-        setUsername(await AsyncStorage.getItem('username'));
-        
+        setUsername(data.name);
         setDepartment(data.department);
         setYear(data.year);
         setRollNumber(data.roll_number);
         setAttendance(data.attendance);
+
       } catch (error) {
         console.error('Error fetching user info:', error);
+        handleUnauthorizedAccess(error, navigation);
       } finally {
         setIsLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
