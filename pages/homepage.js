@@ -18,8 +18,6 @@ import {Fonts} from '../constants/fonts';
 import AppStyles from '../styles';
 import {pages} from '../constants/pages';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {updateHeaders} from '../api/src';
 import {handleUnauthorizedAccess} from '../api/auth';
 
 export default function Homepage({navigation}) {
@@ -43,7 +41,6 @@ export default function Homepage({navigation}) {
         setYear(data.year);
         setRollNumber(data.roll_number);
         setAttendance(data.attendance);
-
       } catch (error) {
         console.error('Error fetching user info:', error);
         handleUnauthorizedAccess(error, navigation);

@@ -5,21 +5,90 @@ import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
 import Icon from '../icons';
 import {getTimeTable} from '../../api/info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TimeTable() {
   const [currentDay, setCurrentDay] = useState(new Date().getDay());
+  const [period, setPeriod] = useState({});
+  const [periodNumber, setPeriodNumber] = useState(-1);
 
   const dayLabels = ['', 'M', 'T', 'W', 'T', 'F', 'S'];
-  let day = new Date().getDay();
 
   useEffect(() => {
+    const handleChangeDay = () => {
+      if (currentDay !== new Date().getDay()) {
+        setCurrentDay(new Date().getDay());
+        return true;
+      }
+    };
+    const handleChangePeriod = () => {
+      let currentTime = new Date().toLocaleString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+      });
+      let _periodNumber = -1;
+      if (currentTime === '8:00:00 AM') {
+        _periodNumber = 1;
+      } else if (currentTime === '9:00:00 AM') {
+        _periodNumber = 2;
+      } else if (currentTime === '10:00:00 AM') {
+        _periodNumber = 3;
+      } else if (currentTime === '11:00:00 AM') {
+        _periodNumber = 4;
+      } else if (currentTime === '12:00:00 PM') {
+        _periodNumber = 5;
+      } else if (currentTime === '1:00:00 PM') {
+        _periodNumber = 6;
+      } else if (currentTime === '2:00:00 PM') {
+        _periodNumber = 7;
+      } else if (currentTime === '3:00:00 PM') {
+        _periodNumber = 8;
+      } else if (currentTime === '4:00:00 PM') {
+        _periodNumber = 9;
+      } else if (currentTime === '5:00:00 PM') {
+        _periodNumber = 10;
+      }
+      if (_periodNumber !== -1 && _periodNumber !== periodNumber) {
+        setPeriodNumber(_periodNumber);
+        return true;
+      }
+    };
+
+    const handleTimeTableData = async day => {
+      try {
+        let timeTable = await AsyncStorage.getItem('timeTable');
+        if (timeTable && timeTable.day === day) {
+          setTimeTable(timeTable);
+          return timeTable;
+        } else {
+          timeTable = await getTimeTable(day).data;
+          await AsyncStorage.setItem('timeTable', timeTable);
+          setTimeTable(timeTable);
+          return timeTable;
+        }
+      } catch (error) {
+        console.log('Error fetching timetable: ', error);
+        handleUnauthorizedAccess(error, navigation);
+      }
+    };
+
     const intervalId = setInterval(() => {
       day = new Date().getDay();
       if (day !== currentDay) {
         setCurrentDay(day);
+        let currentTime = new Date().toLocaleString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+        });
+        if (currentTime === '8:00:00 AM') {
+          getTimeTable()
+            .then(data => {
+              console.log(data);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
       }
     }, 60000);
-
     return () => clearInterval(intervalId);
   }, []);
 

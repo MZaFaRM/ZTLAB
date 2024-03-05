@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// Create a custom Axios instance with default headers
 const api = axios.create({
-  baseURL: 'https://webscrapper-r78p.onrender.com', // Replace with your backend URL
+  baseURL: 'https://webscrapper-r78p.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },

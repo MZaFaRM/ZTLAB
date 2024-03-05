@@ -3,7 +3,7 @@ import {ActivityIndicator, StatusBar, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import 'react-native-gesture-handler'; 
+import 'react-native-gesture-handler';
 
 import {getAuthToken, storeAuthToken} from './services/AuthService';
 import {updateHeaders} from './api/src';
@@ -47,43 +47,6 @@ export default function App() {
   StatusBar.setBarStyle('dark-content');
   StatusBar.setBackgroundColor('#FFFFFF');
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [name, setName] = useState(pages.login);
-  const [component, setComponent] = useState(useCallback(() => Loginpage, []));
-
-  useEffect(() => {
-    async function initializeApp() {
-      try {
-        const token = await getAuthToken();
-        if (token) {
-          updateHeaders('session_id', token);
-          setName(pages.main);
-          setComponent(() => MyDrawer);
-        }
-      } catch (err) {
-        console.log('Error:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    initializeApp();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#FFFFFF',
-        }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
   return (
     <View
       style={{
@@ -93,13 +56,13 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name={name}
-            component={component}
+            name={pages.main}
+            component={MyDrawer}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name={name === pages.main ? pages.login : pages.main}
-            component={component === MyDrawer ? Loginpage : MyDrawer}
+            name={pages.login}
+            component={Loginpage}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
