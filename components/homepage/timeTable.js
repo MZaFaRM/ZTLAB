@@ -28,7 +28,7 @@ export default function TimeTable() {
 
     updateTimetableData();
 
-    const intervalId = setInterval(updateTimetableData, 6000);
+    const intervalId = setInterval(updateTimetableData, 300000);
 
     return () => clearInterval(intervalId);
   }, []);

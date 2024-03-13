@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {getUserInfo} from '../api/info';
