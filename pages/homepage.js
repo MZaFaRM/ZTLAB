@@ -34,13 +34,13 @@ export default function Homepage({navigation}) {
       setIsLoading(true);
       try {
         const response = await getUserInfo();
-        const data = response.data;
+        const userData = response.data;
 
-        setUsername(data.name);
-        setDepartment(data.department);
-        setYear(data.year);
-        setRollNumber(data.roll_number);
-        setAttendance(data.attendance);
+        setUsername(userData.name);
+        setDepartment(userData.department);
+        setYear(userData.year);
+        setRollNumber(userData.roll_number);
+        setAttendance(userData.attendance);
       } catch (error) {
         console.error('Error fetching user info:', error);
         handleUnauthorizedAccess(error, navigation);

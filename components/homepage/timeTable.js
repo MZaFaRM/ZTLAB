@@ -8,87 +8,121 @@ import {getTimeTable} from '../../api/info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TimeTable() {
-  const [currentDay, setCurrentDay] = useState(new Date().getDay());
+  const [currentDay, setCurrentDay] = useState();
   const [period, setPeriod] = useState({});
-  const [periodNumber, setPeriodNumber] = useState(-1);
+  const [timetable, setTimeTable] = useState([]);
 
   const dayLabels = ['', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   useEffect(() => {
-    const handleChangeDay = () => {
-      if (currentDay !== new Date().getDay()) {
-        setCurrentDay(new Date().getDay());
-        return true;
-      }
-    };
-    const handleChangePeriod = () => {
-      let currentTime = new Date().toLocaleString('en-IN', {
-        timeZone: 'Asia/Kolkata',
-      });
-      let _periodNumber = -1;
-      if (currentTime === '8:00:00 AM') {
-        _periodNumber = 1;
-      } else if (currentTime === '9:00:00 AM') {
-        _periodNumber = 2;
-      } else if (currentTime === '10:00:00 AM') {
-        _periodNumber = 3;
-      } else if (currentTime === '11:00:00 AM') {
-        _periodNumber = 4;
-      } else if (currentTime === '12:00:00 PM') {
-        _periodNumber = 5;
-      } else if (currentTime === '1:00:00 PM') {
-        _periodNumber = 6;
-      } else if (currentTime === '2:00:00 PM') {
-        _periodNumber = 7;
-      } else if (currentTime === '3:00:00 PM') {
-        _periodNumber = 8;
-      } else if (currentTime === '4:00:00 PM') {
-        _periodNumber = 9;
-      } else if (currentTime === '5:00:00 PM') {
-        _periodNumber = 10;
-      }
-      if (_periodNumber !== -1 && _periodNumber !== periodNumber) {
-        setPeriodNumber(_periodNumber);
-        return true;
-      }
-    };
+    // Check if new day
+    // If new day
+    // Update current day
+    // Check for timetable in Async Storage else send API
+    // Then adjust period according to time
 
-    const handleTimeTableData = async day => {
+    const fetchTimeTable = async day => {
       try {
-        let timeTable = await AsyncStorage.getItem('timeTable');
-        if (timeTable && timeTable.day === day) {
-          setTimeTable(timeTable);
-          return timeTable;
-        } else {
-          timeTable = await getTimeTable(day).data;
-          await AsyncStorage.setItem('timeTable', timeTable);
-          setTimeTable(timeTable);
-          return timeTable;
+        let timetable = JSON.parse(await AsyncStorage.getItem('timetable'));
+        if (!timetable || timetable.day != day) {
+          let timetableData = await getTimeTable(day);
+          timetable = timetableData.data
+
+          await AsyncStorage.setItem('timetable', JSON.stringify(timetable));
+          setTimeTable(timetable);
         }
+        return timetable;
       } catch (error) {
-        console.log('Error fetching timetable: ', error);
-        handleUnauthorizedAccess(error, navigation);
+        console.log(error);
       }
     };
 
-    const intervalId = setInterval(() => {
-      day = new Date().getDay();
-      if (day !== currentDay) {
-        setCurrentDay(day);
-        let currentTime = new Date().toLocaleString('en-IN', {
-          timeZone: 'Asia/Kolkata',
-        });
-        if (currentTime === '8:00:00 AM') {
-          getTimeTable()
-            .then(data => {
-              console.log(data);
-            })
-            .catch(error => {
-              console.log(error);
-            });
+    const convertToDecimalTime = currentTime => {
+      const hours = currentTime.getHours();
+      const minutes = currentTime.getMinutes();
+      const decimalTime = hours + minutes / 60;
+
+      return decimalTime;
+    };
+
+    const isBetween = (startTime, endTime, currentTime) => {
+      const startMinutes = Math.floor(startTime) * 60 + (startTime % 1) * 100;
+      const endMinutes = Math.floor(endTime) * 60 + (endTime % 1) * 100;
+      const currentMinutes =
+        Math.floor(currentTime) * 60 + (currentTime % 1) * 100;
+
+      return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+    };
+
+    const isInterval = (time, interval) => {
+      return isBetween(interval[0], interval[1], time);
+    };
+
+    const getCurrentPeriodIndex = currentDay => {
+      let _periodNumber = 0;
+      let decimalCurrentTime = convertToDecimalTime(currentDay);
+
+      const timePeriods = {
+        mondayToThursday: [9, 10, 1, 2, 3],
+        friday: [9, 10, 11, 14.5, 15.25],
+      };
+
+      const intervalTimings = {
+        mondayToThursday: [12.0, 13.0],
+        friday: [12.0, 13.75],
+      };
+
+      let todaysTimings = NaN;
+      let todaysInterval = NaN;
+      if (currentDay === 5) {
+        todaysTimings = timePeriods.friday;
+        todaysInterval = intervalTimings.friday;
+      } else {
+        todaysTimings = timePeriods.mondayToThursday;
+        todaysInterval = intervalTimings.mondayToThursday;
+      }
+
+      if (
+        isInterval(decimalCurrentTime, todaysInterval) || // If is interval
+        decimalCurrentTime < todaysTimings[0] || // or if early than class
+        decimalCurrentTime > todaysTimings[todaysTimings.length - 1] // or late after class
+      ) {
+        return -1;
+      }
+
+      for (
+        _periodNumber = 0;
+        decimalCurrentTime < todaysTimings[_periodNumber];
+        _periodNumber++
+      );
+
+      return _periodNumber;
+    };
+
+    const setCurrentPeriod = index => {
+      if (index != -1) {
+        setPeriod(timetable.at(index));
+      }
+    };
+
+    const intervalId = setInterval(async () => {
+      let day = new Date(2024, 3, 18, 10, 30, 0, 0);
+
+      let dayIndex = day.getDay();
+      console.log(dayIndex);
+      if (dayIndex !== currentDay) {
+        setCurrentDay(dayIndex);
+        if (dayIndex !== 0) {
+          let timeTable = await fetchTimeTable(dayIndex);
+          setTimeTable(timeTable);
+          console.log('Fetched', timetable);
         }
       }
-    }, 60000);
+      if (dayIndex !== 0) setCurrentPeriod(getCurrentPeriodIndex(day));
+
+      console.log("End", timetable);
+    }, 6000);
+
     return () => clearInterval(intervalId);
   }, []);
 

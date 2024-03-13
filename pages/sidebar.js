@@ -1,34 +1,30 @@
-import React, {useState, useEffect} from 'react';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
+  ActivityIndicator,
+  Image,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Image,
-  ActivityIndicator,
-  Alert,
+  View,
 } from 'react-native';
-import {DrawerContentScrollView} from '@react-navigation/drawer';
-import {Fonts} from '../constants/fonts';
-import {Colors} from '../constants/colors';
 import {
+  GeneralInfo,
   ProfileItem,
   SignatureItem,
-  GeneralInfo,
 } from '../components/sidebar/sidebar';
+import {Colors} from '../constants/colors';
+import {Fonts} from '../constants/fonts';
 
-import {getSidebarUserInfo} from '../api/info';
 import {useNavigation} from '@react-navigation/native';
+import {getSidebarUserInfo} from '../api/info';
 
-import {updateHeaders} from '../api/src';
 import {pages} from '../constants/pages';
 
 import {removeAuthToken} from '../services/AuthService';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../components/icons';
-
-import AppStyles from '../styles';
 
 import * as ImagePicker from 'react-native-image-picker';
 import {handleUnauthorizedAccess} from '../api/auth';
@@ -69,32 +65,32 @@ const CustomDrawerContent = props => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getSidebarUserInfo();
+        const userData = response.data;
 
-    getSidebarUserInfo()
-      .then(data => {
-        res = data.data;
+        setProfileImg(userData.profile_pic);
+        setUsername(userData.name);
+        setUniRegNo(userData.uni_reg_no);
+        setAdmNo(userData.admission_no);
+        setMobileNo(userData.mobile_no);
+        setEmail(userData.email);
+        setAcademicYear(userData.academic_year);
+        setAddress(userData.address);
+        setSign(userData.sign);
 
-        setProfileImg(res.profile_pic);
-        setUsername(res.name);
-
-        AsyncStorage.setItem('profile_pic', res.profile_pic);
-
-        setUniRegNo(res.uni_reg_no);
-        setAdmNo(res.admission_no);
-        setMobileNo(res.mobile_no);
-        setEmail(res.email);
-        setAcademicYear(res.academic_year);
-        setAddress(res.address);
-        setSign(res.sign);
-      })
-      .catch(e => {
-        handleUnauthorizedAccess(e, navigation);
-      })
-      .finally(() => {
+        await AsyncStorage.setItem('profile_pic', userData.profile_pic);
+      } catch (error) {
+        handleUnauthorizedAccess(error, navigation);
+      } finally {
         setIsLoading(false);
-      });
-  }, [profileImg]);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   handleLogout = () => {
     removeAuthToken()

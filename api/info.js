@@ -3,7 +3,7 @@ import {InvalidTokenError} from './auth';
 import {updateHeaders} from './src';
 import {getAuthToken} from '../services/AuthService';
 
-const fetchData = async (endpoint) => {
+const fetchData = async endpoint => {
   try {
     const token = await getAuthToken();
     updateHeaders('session_id', token);
@@ -12,13 +12,12 @@ const fetchData = async (endpoint) => {
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      throw new InvalidTokenError('Invalid token');
+      throw new InvalidTokenError(`Invalid token`);
     } else {
-      throw new Error(`Failed to fetch data: ${error}`);
+      throw new Error(`Failed to fetch data: ${JSON.stringify(error.response.data)}`);
     }
   }
 };
-
 
 export const getUserInfo = async () => {
   return await fetchData(`/get-details/`);
@@ -37,5 +36,6 @@ export const getSubjectWiseAttendance = async () => {
 };
 
 export const getTimeTable = async day => {
+  console.log(`/get-timetable/${day}/`);
   return await fetchData(`/get-timetable/${day}`);
 };

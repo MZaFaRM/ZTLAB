@@ -19,11 +19,17 @@ function Header({navigation}) {
   const [profilePic, setProfilePic] = useState('');
 
   useEffect(() => {
-    setIsLoading(true);
-    AsyncStorage.getItem('profile_pic').then(value => {
-      setProfilePic(value);
-      setIsLoading(false);
-    });
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const profile_pic = await AsyncStorage.getItem('profile_pic');
+        setProfilePic(profile_pic);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
