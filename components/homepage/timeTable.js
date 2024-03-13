@@ -1,127 +1,34 @@
 import {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Colors} from '../../constants/colors';
 import {Fonts} from '../../constants/fonts';
 import AppStyles from '../../styles';
 import Icon from '../icons';
-import {getTimeTable} from '../../api/info';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import fetchAndUpdateTimetable from '../../src/helpers/TimeTable';
+
+
 
 export default function TimeTable() {
   const [currentDay, setCurrentDay] = useState();
   const [period, setPeriod] = useState({});
-  const [timetable, setTimeTable] = useState([]);
 
   const dayLabels = ['', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   useEffect(() => {
-    // Check if new day
-    // If new day
-    // Update current day
-    // Check for timetable in Async Storage else send API
-    // Then adjust period according to time
-
-    const fetchTimeTable = async day => {
+    const updateTimetableData = async () => {
       try {
-        let timetable = JSON.parse(await AsyncStorage.getItem('timetable'));
-        if (!timetable || timetable.day != day) {
-          let timetableData = await getTimeTable(day);
-          timetable = timetableData.data
-
-          await AsyncStorage.setItem('timetable', JSON.stringify(timetable));
-          setTimeTable(timetable);
-        }
-        return timetable;
+        const {currentDay, currentPeriod} =
+          await fetchAndUpdateTimetable();
+        setCurrentDay(currentDay);
+        setPeriod(currentPeriod);
       } catch (error) {
-        console.log(error);
+        console.error('Error updating timetable data:', error);
       }
     };
 
-    const convertToDecimalTime = currentTime => {
-      const hours = currentTime.getHours();
-      const minutes = currentTime.getMinutes();
-      const decimalTime = hours + minutes / 60;
+    updateTimetableData();
 
-      return decimalTime;
-    };
-
-    const isBetween = (startTime, endTime, currentTime) => {
-      const startMinutes = Math.floor(startTime) * 60 + (startTime % 1) * 100;
-      const endMinutes = Math.floor(endTime) * 60 + (endTime % 1) * 100;
-      const currentMinutes =
-        Math.floor(currentTime) * 60 + (currentTime % 1) * 100;
-
-      return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
-    };
-
-    const isInterval = (time, interval) => {
-      return isBetween(interval[0], interval[1], time);
-    };
-
-    const getCurrentPeriodIndex = currentDay => {
-      let _periodNumber = 0;
-      let decimalCurrentTime = convertToDecimalTime(currentDay);
-
-      const timePeriods = {
-        mondayToThursday: [9, 10, 1, 2, 3],
-        friday: [9, 10, 11, 14.5, 15.25],
-      };
-
-      const intervalTimings = {
-        mondayToThursday: [12.0, 13.0],
-        friday: [12.0, 13.75],
-      };
-
-      let todaysTimings = NaN;
-      let todaysInterval = NaN;
-      if (currentDay === 5) {
-        todaysTimings = timePeriods.friday;
-        todaysInterval = intervalTimings.friday;
-      } else {
-        todaysTimings = timePeriods.mondayToThursday;
-        todaysInterval = intervalTimings.mondayToThursday;
-      }
-
-      if (
-        isInterval(decimalCurrentTime, todaysInterval) || // If is interval
-        decimalCurrentTime < todaysTimings[0] || // or if early than class
-        decimalCurrentTime > todaysTimings[todaysTimings.length - 1] // or late after class
-      ) {
-        return -1;
-      }
-
-      for (
-        _periodNumber = 0;
-        decimalCurrentTime < todaysTimings[_periodNumber];
-        _periodNumber++
-      );
-
-      return _periodNumber;
-    };
-
-    const setCurrentPeriod = index => {
-      if (index != -1) {
-        setPeriod(timetable.at(index));
-      }
-    };
-
-    const intervalId = setInterval(async () => {
-      let day = new Date(2024, 3, 18, 10, 30, 0, 0);
-
-      let dayIndex = day.getDay();
-      console.log(dayIndex);
-      if (dayIndex !== currentDay) {
-        setCurrentDay(dayIndex);
-        if (dayIndex !== 0) {
-          let timeTable = await fetchTimeTable(dayIndex);
-          setTimeTable(timeTable);
-          console.log('Fetched', timetable);
-        }
-      }
-      if (dayIndex !== 0) setCurrentPeriod(getCurrentPeriodIndex(day));
-
-      console.log("End", timetable);
-    }, 6000);
+    const intervalId = setInterval(updateTimetableData, 6000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -165,14 +72,16 @@ export default function TimeTable() {
         />
         <View>
           <View style={styles.PeriodNumber}>
-            <Text style={[Fonts.Body, {color: Colors.Grey}]}>Period III</Text>
+            <Text style={[Fonts.Body, {color: Colors.Grey}]}>
+              Period {period.roman}
+            </Text>
           </View>
           <View style={styles.PeriodName}>
-            <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
-              ITT401 - Data Analysis
+            <Text style={[Fonts.Heading1, styles.subjectName]}>
+              {period.subject_name || 'No Class Scheduled'}
             </Text>
             <Text style={[Fonts.Body, {color: Colors.Grey}]}>
-              By Prof. John Doe [Theory]
+              {period.professor || 'Unknown'} {period.subject_type}
             </Text>
           </View>
         </View>
@@ -224,6 +133,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     marginTop: 15,
     borderBottomColor: Colors.LightGrey,
+  },
+  subjectName: {
+    color: Colors.DarkGrey,
+    fontSize: 16,
+    textAlign: 'center',
   },
   PeriodName: {
     width: 250,

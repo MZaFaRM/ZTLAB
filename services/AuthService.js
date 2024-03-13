@@ -7,7 +7,7 @@ const storeAuthToken = async token => {
     console.error('Error storing authentication token:', error);
   }
 };
-
+  
 const getAuthToken = async () => {
   try {
     const token = await AsyncStorage.getItem('authToken');
