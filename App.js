@@ -1,20 +1,18 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {ActivityIndicator, StatusBar, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
+import { StatusBar, View } from 'react-native';
 import 'react-native-gesture-handler';
 
-import {getAuthToken, storeAuthToken} from './services/AuthService';
-import {updateHeaders} from './api/src';
 
 // Pages and components
-import CustomDrawerContent from './pages/sidebar';
-import Homepage from './pages/homepage';
-import Loginpage from './pages/loginpage';
-import AssignmentsPage from './pages/assignments';
-import SubjectWiseAttendance from './pages/subjectWiseAttendance';
-import {pages} from './constants/pages';
+import { pages } from './src/constants/constants';
+import AssignmentsPage from './src/pages/assignments';
+import Homepage from './src/pages/HomePage';
+import CustomDrawerContent from './src/pages/sidebar';
+import SubjectWiseAttendance from './src/pages/subjectWiseAttendance';
+import LoginPage from './src/pages/LoginPage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -62,7 +60,7 @@ export default function App() {
           />
           <Stack.Screen
             name={pages.login}
-            component={Loginpage}
+            component={LoginPage}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

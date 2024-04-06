@@ -1,4 +1,4 @@
-import {getTimeTable} from '../../api/info';
+import {getTimeTable} from '../api/info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const fetchAndUpdateTimetable = async () => {
