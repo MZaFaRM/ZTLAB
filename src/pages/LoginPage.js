@@ -22,20 +22,32 @@ export default function LoginPage() {
   const [college, setCollege] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const webViewRef = useRef(null);
-
-  const handleLogin = () => {
+  const handleLogin = (username, password) => {
     setIsLoading(true);
-    login(webViewRef, username, password);
-    setIsLoading(false);
-  };
 
-  const loginRedirect = navState => {
-    // Check if the WebView has navigated to a
-    // different page after login attempt
-    if (navState.url !== etlabPages.login) {
-      navigation.navigate(pages.home);
-    }
+    login(username, password)
+      .then(response => {
+        if (response) {
+          updateHeaders('session_id', response.session_id);
+          storeAuthToken(response.session_id)
+            .then(() => {
+              console.log('Logged in:', response.session_id);
+            })
+            .catch(err => {
+              console.log('Error logging in:', err);
+              setIsLoading(false);
+            });
+
+          navigation.replace(pages.main);
+        } else {
+          console.log('Login failed');
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log('Error logging in:', err);
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -79,7 +91,7 @@ export default function LoginPage() {
           <View style={{width: '100%'}}>
             <TextInput
               placeholder="Password"
-              // secureTextEntry={true}
+              secureTextEntry={true}
               placeholderTextColor={Colors.Grey}
               onChangeText={setPassword}
               value={password}
@@ -108,14 +120,6 @@ export default function LoginPage() {
           </View>
         </View>
       </View>
-
-      <WebView
-        // style={{opacity: 0, height: 0, width: 0}}
-        ref={webViewRef}
-        source={{uri: etlabPages.login}}
-        onNavigationStateChange={navState => loginRedirect(navState)}
-      />
-
       <View
         style={[
           styles.SignInBox,
@@ -133,7 +137,9 @@ export default function LoginPage() {
           <TouchableOpacity
             style={styles.SignInButton}
             disabled={isLoading}
-            onPress={handleLogin}>
+            onPress={() => {
+              handleLogin(username, password);
+            }}>
             <Text style={[Fonts.Body, styles.SignInText]}>Login</Text>
           </TouchableOpacity>
         )}

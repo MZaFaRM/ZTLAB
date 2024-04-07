@@ -3,12 +3,8 @@ import {api} from './src';
 import urlPatterns from './urls';
 import {getName} from './helper';
 
-export const login = (webViewRef, username, password) => {
-  webViewRef.current.injectJavaScript(`
-        document.querySelector('input#LoginForm_username').value = '${username}';
-        document.querySelector('input#LoginForm_password').value = '${password}';
-        document.querySelector('form#login-form').submit()
-      `);
+export const login = async (username, password) => {
+   api.get
 }
 
 

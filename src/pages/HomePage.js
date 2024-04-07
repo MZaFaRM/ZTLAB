@@ -1,25 +1,22 @@
-import {React, useState, useEffect, useRef} from 'react';
+import { React, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  Image,
+  View
 } from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
-import {getUserInfo} from '../api/info';
-import Attendance from '../components/homepage/attendance';
+import { ScrollView } from 'react-native-virtualized-view';
+import { getUserInfo } from '../api/info';
+import OverallAttendance from '../components/homepage/attendance';
 import Menu from '../components/homepage/menu';
 import TimeTable from '../components/homepage/timeTable';
 import Icon from '../components/icons';
 import Layout from '../components/layout/layout';
-import {Colors} from '../constants/constants';
-import {Fonts} from '../constants/constants';
+import { Colors, Fonts, pages } from '../constants/constants';
 import AppStyles from '../constants/styles';
-import {pages} from '../constants/constants';
 
-import {handleUnauthorizedAccess} from '../api/auth';
+import { handleUnauthorizedAccess } from '../api/auth';
 
 export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,13 +27,11 @@ export default function Homepage({navigation}) {
   const [rollNumber, setRollNumber] = useState('');
   const [attendance, setAttendance] = useState('');
 
-  const webViewRef = useRef(null);
-
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = getUserInfo(webViewRef);
+        const response = await getUserInfo();
         const userData = response.data;
 
         setUsername(userData.name);
@@ -106,19 +101,11 @@ export default function Homepage({navigation}) {
               </View>
             </View>
             <TimeTable />
-            <Attendance attendance={attendance} />
+            <OverallAttendance attendance={attendance} />
             <Menu />
           </ScrollView>
         </Layout>
       )}
-
-      <WebView
-        // style={{opacity: 0, height: 0, width: 0}}
-        ref={webViewRef}
-        source={{uri: etlabPages.login}}
-        onNavigationStateChange={navState => loginRedirect(navState)}
-      />
-
     </View>
   );
 }
