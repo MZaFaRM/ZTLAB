@@ -48,14 +48,14 @@ export default function Footer({currentPage}) {
       <TouchableOpacity
         style={[
           styles.FooterOption,
-          currentPage === 'alerts' ? {borderTopColor: Colors.Blue} : {},
+          currentPage === pages.alerts ? {borderTopColor: Colors.Blue} : {},
         ]}
-        onPress={() => handlePageChange('alerts')}>
+        onPress={() => handlePageChange(pages.alerts)}>
         <Icon
           type="FontAwesome5"
           name="bell"
           size={25}
-          color={currentPage === 'alerts' ? Colors.Blue : Colors.Grey}
+          color={currentPage === pages.alerts ? Colors.Blue : Colors.Grey}
           style={styles.PeriodCaret}
         />
       </TouchableOpacity>

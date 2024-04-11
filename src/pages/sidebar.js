@@ -1,5 +1,5 @@
-import {DrawerContentScrollView} from '@react-navigation/drawer';
-import React, {useEffect, useState} from 'react';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -8,28 +8,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  GeneralInfo,
-  ProfileItem,
-  SignatureItem,
-} from '../components/sidebar/sidebar';
-import {Colors} from '../constants/constants';
-import {Fonts} from '../constants/constants';
+import { GeneralInfo, ProfileItem, SignatureItem } from '../components/sidebar/sidebar';
+import { Colors, Fonts } from '../constants/constants';
 
-import {useNavigation} from '@react-navigation/native';
-import {getSidebarUserInfo} from '../api/info';
+import { useNavigation } from '@react-navigation/native';
+import { getSidebarUserInfo } from '../api/info';
 
-import {pages} from '../constants/constants';
+import { pages } from '../constants/constants';
 
-import {removeAuthToken} from '../../services/AuthService';
+import { removeAuthToken } from '../../services/AuthService';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../components/icons';
 
 import * as ImagePicker from 'react-native-image-picker';
-import {handleUnauthorizedAccess} from '../api/auth';
+import { handleUnauthorizedAccess } from '../api/auth';
 
-const CustomDrawerContent = props => {
+const SideBar = props => {
   const [isLoading, setIsLoading] = useState(true);
   const [profileImg, setProfileImg] = useState('');
   const [username, setUsername] = useState('');
@@ -83,7 +78,8 @@ const CustomDrawerContent = props => {
 
         await AsyncStorage.setItem('profile_pic', userData.profile_pic);
       } catch (error) {
-        handleUnauthorizedAccess(error, navigation);
+        console.error('Error fetching user info:', error);
+        await handleUnauthorizedAccess(error, navigation);
       } finally {
         setIsLoading(false);
       }
@@ -92,11 +88,9 @@ const CustomDrawerContent = props => {
     fetchData();
   }, []);
 
-  handleLogout = () => {
-    removeAuthToken()
-      .then(() => {})
-      .catch(e => console.log(e));
-
+  const handleLogout = async () => {
+    await removeAuthToken();
+    await AsyncStorage.removeItem('userData');
     navigation.replace(pages.login);
   };
 
@@ -165,7 +159,9 @@ const CustomDrawerContent = props => {
               iconType="MaterialIcons"
               text="Logout"
               type="red"
-              onPress={handleLogout}
+              onPress={() => {
+                handleLogout();
+              }}
             />
           </View>
           <View style={styles.sourceVersion}>
@@ -239,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomDrawerContent;
+export default SideBar;

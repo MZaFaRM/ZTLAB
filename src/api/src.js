@@ -9,6 +9,7 @@ const api = axios.create({
 });
 
 const updateHeaders = (headerName, headerValue) => {
+  console.log("Updated headers", headerName, headerValue);
   api.defaults.headers.common[headerName] = headerValue;
 };
 

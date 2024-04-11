@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { ScrollView } from 'react-native-virtualized-view';
 import { getUserInfo } from '../api/info';
@@ -16,7 +16,6 @@ import Layout from '../components/layout/layout';
 import { Colors, Fonts, pages } from '../constants/constants';
 import AppStyles from '../constants/styles';
 
-import { handleUnauthorizedAccess } from '../api/auth';
 
 export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +40,6 @@ export default function Homepage({navigation}) {
         setAttendance(userData.attendance);
       } catch (error) {
         console.error('Error fetching user info:', error);
-        handleUnauthorizedAccess(error, navigation);
       } finally {
         setIsLoading(false);
       }
@@ -52,60 +50,71 @@ export default function Homepage({navigation}) {
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <Layout navigation={navigation} currentPage={pages.home}>
-          <ScrollView
-            contentContainerStyle={styles.Homepage}
-            showsVerticalScrollIndicator={false}>
-            <View style={styles.Profile}>
-              <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
-                {username}
-              </Text>
-              <Text style={[Fonts.Body]}>
-                {department} {year}
-              </Text>
-              <Text style={[Fonts.Body]}>
-                Roll No :
-                <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}>
-                  {' '}
-                  {rollNumber}
+      <Layout navigation={navigation} currentPage={pages.home}>
+        <ScrollView
+          contentContainerStyle={styles.Homepage}
+          showsVerticalScrollIndicator={false}>
+          {isLoading ? (
+            <View
+              style={{
+                paddingVertical: '100%',
+              }}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : (
+            <>
+              <View style={styles.Profile}>
+                <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
+                  {username}
                 </Text>
-              </Text>
-            </View>
-            <View style={styles.Marks}>
-              <View style={styles.CGPA}>
-                <Text style={Fonts.Body}>CGPA</Text>
-                <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
-              </View>
-              <View style={styles.PrevCGPA}>
-                <Text style={Fonts.Body}>Prev - CGPA</Text>
-                <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
-              </View>
-              <View style={styles.Analysis}>
-                <TouchableOpacity
-                  onPress={() => {}}
-                  style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
-                  <Icon
-                    type="Entypo"
-                    name="bar-graph"
-                    size={15}
-                    color={Colors.Blue}
-                  />
-                  <Text
-                    style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 10}]}>
-                    Analysis
+                <Text style={[Fonts.Body]}>
+                  {department} {year}
+                </Text>
+                <Text style={[Fonts.Body]}>
+                  Roll No :
+                  <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}>
+                    {' '}
+                    {rollNumber}
                   </Text>
-                </TouchableOpacity>
+                </Text>
               </View>
-            </View>
-            <TimeTable />
-            <OverallAttendance attendance={attendance} />
-            <Menu />
-          </ScrollView>
-        </Layout>
-      )}
+              <View style={styles.Marks}>
+                <View style={styles.CGPA}>
+                  <Text style={Fonts.Body}>CGPA</Text>
+                  <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
+                </View>
+                <View style={styles.PrevCGPA}>
+                  <Text style={Fonts.Body}>Prev - CGPA</Text>
+                  <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
+                </View>
+                <View style={styles.Analysis}>
+                  <TouchableOpacity
+                    onPress={() => {}}
+                    style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
+                    <Icon
+                      type="Entypo"
+                      name="bar-graph"
+                      size={15}
+                      color={Colors.Blue}
+                    />
+                    <Text
+                      style={[
+                        Fonts.Body,
+                        AppStyles.BlueText,
+                        {marginLeft: 10},
+                      ]}>
+                      Analysis
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <TimeTable />
+              <OverallAttendance attendance={attendance} />
+              <Menu />
+            </>
+          )}
+        </ScrollView>
+      </Layout>
     </View>
   );
 }
@@ -114,6 +123,7 @@ const styles = StyleSheet.create({
   Homepage: {
     padding: 25,
     paddingTop: 15,
+    justifyContent: 'center',
   },
   Profile: {},
   Marks: {

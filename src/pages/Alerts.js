@@ -11,39 +11,25 @@ import { Colors, Fonts, pages } from '../constants/constants';
 
 import { UnderConstruction } from '../components/underConstruction';
 
-export default function AssignmentsPage({navigation}) {
-  const [AssignmentsData, setAssignmentsData] = useState('');
+export default function AlertsPage({navigation}) {
+  const [AlertsData, setAlertsData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   getAssignmentInfo()
-  //     .then(response => {
-  //       setAssignmentsData(response.data);
-  //       setIsLoading(false);
-  //       AsyncStorage.setItem('assignments', JSON.stringify(response.data));
-  //     })
-  //     .catch(err => {
-  //       setIsLoading(false);
-  //     });
-  // }, []);
 
   return (
     <View style={{flex: 1, justifyContent: 'center'}}>
-      <Layout navigation={navigation} currentPage={pages.assignments}>
+      <Layout navigation={navigation} currentPage={pages.alerts}>
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={styles.AssignmentsPage}>
+            style={styles.AlertsPage}>
             <View>
               <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
-                Assignments
+                Alerts
               </Text>
             </View>
             <UnderConstruction />
-            {/* <AssignmentsTable AssignmentsData={AssignmentsData} /> */}
           </ScrollView>
         )}
       </Layout>
@@ -52,7 +38,7 @@ export default function AssignmentsPage({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  AssignmentsPage: {
+  AlertsPage: {
     padding: 20,
   },
 });

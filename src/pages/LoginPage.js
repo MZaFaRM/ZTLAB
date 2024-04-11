@@ -1,6 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Picker} from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -9,12 +10,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WebView} from 'react-native-webview';
-import {login} from '../api/auth';
-import Icon from '../components/icons';
-import {Colors, Fonts, pages, etlabPages} from '../constants/constants';
-import {updateHeaders} from '../api/src';
 import {storeAuthToken} from '../../services/AuthService';
+import {login} from '../api/auth';
+import {updateHeaders} from '../api/src';
+import Icon from '../components/icons';
+import {Colors, Fonts, pages} from '../constants/constants';
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -23,12 +23,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [college, setCollege] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const handleLogin = async (username, password) => {
     try {
-      setIsLoading(true);
+      setIsLoading(true); 
       const response = await login(username, password);
+
       if (response.session_id) {
+        await AsyncStorage.setItem(
+          'userData',
+          JSON.stringify({username: username, password: password}),
+        );
+
         updateHeaders('session_id', response.session_id);
         await storeAuthToken(response.session_id);
         console.log('Logged in:', response.session_id);

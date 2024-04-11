@@ -42,6 +42,7 @@ export const pages = {
   assignments: 'Assignments',
   login: 'Login',
   main: 'Main',
+  alerts: 'alerts',
   subjectWiseAttendance: 'SubjectWiseAttendance',
 };
 

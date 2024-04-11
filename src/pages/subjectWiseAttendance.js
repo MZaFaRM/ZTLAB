@@ -1,13 +1,10 @@
-import {React, useState, useEffect} from 'react';
-import {ActivityIndicator, StyleSheet, Text} from 'react-native';
-import {ScrollView} from 'react-native-virtualized-view';
+import { React, useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { ScrollView } from 'react-native-virtualized-view';
+import { getSubjectWiseAttendance } from '../api/info';
+import { SubjectBox } from '../components/assignments/attendance/subjectBox';
 import Layout from '../components/layout/layout';
-import {Colors} from '../constants/constants';
-import {Fonts} from '../constants/constants';
-import {pages} from '../constants/constants';
-import {getSubjectWiseAttendance} from '../api/info';
-import {SubjectBox} from '../components/assignments/attendance/subjectBox';
-import {handleUnauthorizedAccess} from '../api/auth';
+import { Colors, Fonts, pages } from '../constants/constants';
 
 const SubjectWiseAttendance = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);

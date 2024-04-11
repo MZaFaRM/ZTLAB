@@ -1,7 +1,6 @@
-import {api} from './src';
-import {InvalidTokenError} from './auth';
-import {updateHeaders} from './src';
-import {getAuthToken} from '../../services/AuthService';
+import { getAuthToken } from '../../services/AuthService';
+import { InvalidTokenError } from './auth';
+import { api, updateHeaders } from './src';
 
 const fetchData = async endpoint => {
   try {
@@ -11,10 +10,10 @@ const fetchData = async endpoint => {
     const response = await api.get(endpoint);
     return response.data;
   } catch (error) {
-    if (error.response && error.response.status === 401) {
+    if (error.response?.status === 401) {
       throw new InvalidTokenError(`Invalid token`);
     } else {
-      return false
+      return false;
       // throw new Error(`Failed to fetch data: ${JSON.stringify(error.response.data)}`);
     }
   }
