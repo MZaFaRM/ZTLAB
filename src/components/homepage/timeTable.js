@@ -90,7 +90,7 @@ export default function TimeTable() {
           </View>
           <View style={styles.PeriodName}>
             <Text style={[Fonts.Heading1, styles.subjectName]}>
-              {period.subject_name || 'No class scheduled'}
+              {period.subject_name || 'No classes scheduled'}
             </Text>
             <Text style={[Fonts.Body, {color: Colors.Grey}]}>
               {period.professor || 'Unknown'} {period.subject_type}

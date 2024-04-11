@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react';
+import {React, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,19 +6,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ScrollView } from 'react-native-virtualized-view';
-import { getUserInfo } from '../api/info';
+import Minesweeper from './Minesweeper';
+import {ScrollView} from 'react-native-virtualized-view';
+import {getUserInfo} from '../api/info';
 import OverallAttendance from '../components/homepage/attendance';
 import Menu from '../components/homepage/menu';
 import TimeTable from '../components/homepage/timeTable';
 import Icon from '../components/icons';
 import Layout from '../components/layout/layout';
-import { Colors, Fonts, pages } from '../constants/constants';
+import {Colors, Fonts, pages} from '../constants/constants';
 import AppStyles from '../constants/styles';
 
-
 export default function Homepage({navigation}) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [username, setUsername] = useState('');
   const [department, setDepartment] = useState('');
@@ -41,7 +41,7 @@ export default function Homepage({navigation}) {
       } catch (error) {
         console.error('Error fetching user info:', error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(true);
       }
     };
 
@@ -55,12 +55,7 @@ export default function Homepage({navigation}) {
           contentContainerStyle={styles.Homepage}
           showsVerticalScrollIndicator={false}>
           {isLoading ? (
-            <View
-              style={{
-                paddingVertical: '100%',
-              }}>
-              <ActivityIndicator size="large" color="#0000ff" />
-            </View>
+            <Minesweeper />
           ) : (
             <>
               <View style={styles.Profile}>

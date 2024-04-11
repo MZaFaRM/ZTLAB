@@ -18,9 +18,9 @@ export const ProfileItem = ({label, value}) => (
 
 export const SignatureItem = ({sign}) => (
   <>
-    <TouchableOpacity>
-      <Text style={[Fonts.Body, {color: Colors.Blue}]}>change signature</Text>
-    </TouchableOpacity>
+    {/* <TouchableOpacity> */}
+      <Text style={[Fonts.Body]}>Signature</Text>
+    {/* </TouchableOpacity> */}
     <Image source={{uri: sign}} style={styles.sidebarImg} />
   </>
 );

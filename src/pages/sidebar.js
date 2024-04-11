@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { GeneralInfo, ProfileItem, SignatureItem } from '../components/sidebar/sidebar';
+import {
+  GeneralInfo,
+  ProfileItem,
+  SignatureItem,
+} from '../components/sidebar/sidebar';
 import { Colors, Fonts } from '../constants/constants';
 
 import { useNavigation } from '@react-navigation/native';
@@ -22,6 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../components/icons';
 
 import * as ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import { handleUnauthorizedAccess } from '../api/auth';
 
 const SideBar = props => {
@@ -48,13 +53,37 @@ const SideBar = props => {
       quality: 1,
     };
 
-    ImagePicker.launchImageLibrary(options, response => {
+    ImagePicker.launchImageLibrary(options, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        console.log('ImagePicker Response: ', response.assets[0].uri);
+        try {
+          // Resize the image to the desired dimensions
+          const resizedImage = await ImageResizer.createResizedImage(
+            response.assets[0].uri,
+            150, // target width
+            200, // target height
+            'JPEG', // image format
+            100, // quality
+            0, // rotation
+            null, // output path (null = create a temp file)
+            false, // do not preserve metadata
+            {mode: 'contain', onlyScaleDown: true}, // resize mode options
+          );
+
+          const fileSizeInBytes = resizedImage.size;
+          const maxSizeBytes = 1 * 1024 * 1024; // 1MB in bytes
+          if (fileSizeInBytes > maxSizeBytes) {
+            console.log('Image size exceeds 1MB limit');
+            return;
+          }
+
+          console.log('Resized Image URI: ', resizedImage.uri);
+        } catch (error) {
+          console.log('Error resizing image: ', error);
+        }
       }
     });
   };
@@ -113,8 +142,9 @@ const SideBar = props => {
               </View>
               <TouchableOpacity
                 style={styles.iconBox}
-                onPress={() => handleChoosePhoto()}>
-                <Icon type="Entypo" name="edit" size={14} color={Colors.Grey} />
+                // onPress={() => handleChoosePhoto()}
+                >
+                <Icon type="MaterialIcons" name="verified" size={14} color={Colors.Green} />
               </TouchableOpacity>
             </View>
 
