@@ -4,7 +4,6 @@ import {pages} from '../constants/constants';
 import {storeAuthToken} from '../../services/AuthService';
 import {useNavigation} from '@react-navigation/native';
 
-
 export const login = async (username, password) => {
   try {
     const response = await api.post(`/login/`, {
@@ -51,6 +50,7 @@ export const handleUnauthorizedAccess = async (error, navigation) => {
     }
   } catch (error) {
     console.error('Error:', error);
+    navigation.replace(pages.login);
   }
 };
 
