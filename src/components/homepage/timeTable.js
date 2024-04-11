@@ -26,7 +26,6 @@ export default function TimeTable() {
   const updateTimetableData = async () => {
     try {
       const day = new Date();
-      console.log(day, periodIndex);
       const {currentDay, currentPeriod} = await fetchAndUpdateTimetable(
         day,
         periodIndex,
@@ -74,7 +73,7 @@ export default function TimeTable() {
         ))}
       </View>
       <View style={styles.Period}>
-        <TouchableOpacity onPress={() => handleTimeTableNavigation('right')}>
+        <TouchableOpacity onPress={() => handleTimeTableNavigation('left')}>
           <Icon
             type="FontAwesome6"
             name="caret-left"
