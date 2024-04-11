@@ -41,7 +41,7 @@ export default function Homepage({navigation}) {
       } catch (error) {
         console.error('Error fetching user info:', error);
       } finally {
-        setIsLoading(true);
+        setIsLoading(false);
       }
     };
 
