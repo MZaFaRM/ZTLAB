@@ -1,12 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {api} from './src';
-import urlPatterns from './urls';
-import {getName} from './helper';
 
 export const login = async (username, password) => {
-   api.get
-}
+  try {
+    const response = await api.post(`/login/`, {
+      username: username,
+      password: password,
+    });
 
+    if (response.status !== 200) {
+      throw new Error(response.data.error);
+    } else {
+      return response.data.data;
+    }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
 
 export const handleUnauthorizedAccess = (error, navigation) => {
   if (error instanceof InvalidTokenError) {

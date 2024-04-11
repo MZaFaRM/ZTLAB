@@ -13,6 +13,8 @@ import {WebView} from 'react-native-webview';
 import {login} from '../api/auth';
 import Icon from '../components/icons';
 import {Colors, Fonts, pages, etlabPages} from '../constants/constants';
+import {updateHeaders} from '../api/src';
+import {storeAuthToken} from '../../services/AuthService';
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -21,33 +23,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [college, setCollege] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogin = (username, password) => {
-    setIsLoading(true);
-
-    login(username, password)
-      .then(response => {
-        if (response) {
-          updateHeaders('session_id', response.session_id);
-          storeAuthToken(response.session_id)
-            .then(() => {
-              console.log('Logged in:', response.session_id);
-            })
-            .catch(err => {
-              console.log('Error logging in:', err);
-              setIsLoading(false);
-            });
-
-          navigation.replace(pages.main);
-        } else {
-          console.log('Login failed');
-        }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.log('Error logging in:', err);
-        setIsLoading(false);
-      });
+  
+  const handleLogin = async (username, password) => {
+    try {
+      setIsLoading(true);
+      const response = await login(username, password);
+      if (response.session_id) {
+        updateHeaders('session_id', response.session_id);
+        await storeAuthToken(response.session_id);
+        console.log('Logged in:', response.session_id);
+        navigation.replace(pages.main);
+      } else {
+        console.log('Login failed');
+      }
+    } catch (error) {
+      console.log('Error logging in:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

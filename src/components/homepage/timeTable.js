@@ -1,37 +1,48 @@
 import {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../constants/constants';
 import {Fonts} from '../../constants/constants';
 import AppStyles from '../../constants/styles';
 import Icon from '../icons';
 import fetchAndUpdateTimetable from '../../helpers/TimeTable';
 
-
-
 export default function TimeTable() {
   const [currentDay, setCurrentDay] = useState();
   const [period, setPeriod] = useState({});
+  const [periodIndex, setPeriodIndex] = useState(-1);
 
   const dayLabels = ['', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-  useEffect(() => {
-    const updateTimetableData = async () => {
-      try {
-        const {currentDay, currentPeriod} =
-          await fetchAndUpdateTimetable();
-        setCurrentDay(currentDay);
-        setPeriod(currentPeriod);
-      } catch (error) {
-        console.error('Error updating timetable data:', error);
+  const handleTimeTableNavigation = direction => {
+    setPeriodIndex(prevIndex => {
+      if (direction === 'left') {
+        return prevIndex === 0 ? 7 : prevIndex - 1;
+      } else {
+        return (prevIndex + 1) % 8;
       }
-    };
+    });
+  };
 
+  const updateTimetableData = async () => {
+    try {
+      const day = new Date();
+      console.log(day, periodIndex);
+      const {currentDay, currentPeriod} = await fetchAndUpdateTimetable(
+        day,
+        periodIndex,
+      );
+      setCurrentDay(currentDay);
+      setPeriod(currentPeriod);
+    } catch (error) {
+      console.error('Error updating timetable data:', error);
+    }
+  };
+
+  useEffect(() => {
     updateTimetableData();
-
     const intervalId = setInterval(updateTimetableData, 60000);
-
     return () => clearInterval(intervalId);
-  }, []);
+  }, [periodIndex]);
 
   const getDayStyle = dayNumber => {
     return dayNumber === currentDay
@@ -63,13 +74,15 @@ export default function TimeTable() {
         ))}
       </View>
       <View style={styles.Period}>
-        <Icon
-          type="FontAwesome6"
-          name="caret-left"
-          size={15}
-          color={Colors.Blue}
-          style={styles.PeriodCaret}
-        />
+        <TouchableOpacity onPress={() => handleTimeTableNavigation('right')}>
+          <Icon
+            type="FontAwesome6"
+            name="caret-left"
+            size={15}
+            color={Colors.Blue}
+            style={styles.PeriodCaret}
+          />
+        </TouchableOpacity>
         <View>
           <View style={styles.PeriodNumber}>
             <Text style={[Fonts.Body, {color: Colors.Grey}]}>
@@ -78,20 +91,22 @@ export default function TimeTable() {
           </View>
           <View style={styles.PeriodName}>
             <Text style={[Fonts.Heading1, styles.subjectName]}>
-              {period.subject_name || 'No Class Scheduled'}
+              {period.subject_name || 'No class scheduled'}
             </Text>
             <Text style={[Fonts.Body, {color: Colors.Grey}]}>
               {period.professor || 'Unknown'} {period.subject_type}
             </Text>
           </View>
         </View>
-        <Icon
-          type="FontAwesome6"
-          name="caret-right"
-          size={15}
-          color={Colors.Blue}
-          style={styles.PeriodCaret}
-        />
+        <TouchableOpacity onPress={() => handleTimeTableNavigation('right')}>
+          <Icon
+            type="FontAwesome6"
+            name="caret-right"
+            size={15}
+            color={Colors.Blue}
+            style={styles.PeriodCaret}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
