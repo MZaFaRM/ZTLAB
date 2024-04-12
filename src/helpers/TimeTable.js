@@ -100,7 +100,7 @@ const numberToRoman = num => {
   return result;
 };
 
-const fetchAndUpdateTimetable = async (day, periodIndex = null) => {
+const fetchAndUpdateTimetable = async (day, periodIndex = undefined) => {
   try {
     const dayIndex = day.getDay();
     let timetable = [];
@@ -115,11 +115,18 @@ const fetchAndUpdateTimetable = async (day, periodIndex = null) => {
 
     const currentPeriodIndexRoman = numberToRoman(currentPeriodIndex + 1);
 
-    const currentPeriod =
-      currentPeriodIndex !== -1 ? timetable.subjects[currentPeriodIndex] : {};
+    let currentPeriod = {};
+    if (currentPeriodIndex !== -1) {
+      currentPeriod = timetable.subjects[currentPeriodIndex];
+      console.log('currentPeriod:', currentPeriodIndex);
+    }
     currentPeriod['roman'] = currentPeriodIndexRoman;
 
-    return {currentDay: dayIndex, currentPeriod};
+    return {
+      currentDay: dayIndex,
+      currentPeriod,
+      periodIndex: currentPeriodIndex,
+    };
   } catch (error) {
     console.error('Error fetching and updating timetable:', error);
     throw error;

@@ -8,7 +8,7 @@ import {pages} from '../constants/constants';
 import AssignmentsPage from './Assignments';
 import Homepage from './HomePage';
 import AlertsPage from './Alerts';
-import SubjectWiseAttendance from './subjectWiseAttendance';
+import SubjectWiseAttendance from './SubjectWiseAttendance';
 
 const Drawer = createDrawerNavigator();
 

@@ -26,16 +26,18 @@ export default function TimeTable() {
   const updateTimetableData = async () => {
     try {
       const day = new Date();
-      const {currentDay, currentPeriod} = await fetchAndUpdateTimetable(
-        day,
-        periodIndex,
-      );
+      console.log('periodIndex:', periodIndex);
+      const { currentDay, currentPeriod, periodIndex: newIndex } =
+        await fetchAndUpdateTimetable(day, periodIndex);
+  
       setCurrentDay(currentDay);
       setPeriod(currentPeriod);
+      setPeriodIndex(newIndex);
     } catch (error) {
       console.error('Error updating timetable data:', error);
     }
   };
+  
 
   useEffect(() => {
     updateTimetableData();
