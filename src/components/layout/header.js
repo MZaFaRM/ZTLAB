@@ -18,19 +18,38 @@ function Header({navigation}) {
 
   const [profilePic, setProfilePic] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const profile_pic = await AsyncStorage.getItem('profile_pic');
-        setProfilePic(profile_pic);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const getProfilePic = async () => {
+    try {
+      return await AsyncStorage.getItem('profile_pic');
+    } catch (error) {
+      console.error('Error fetching profile pic:', error);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    let intervalId;
+  
+    if (!profilePic) {
+      const fetchAndUpdate = async () => {
+        try {
+          const pic = await getProfilePic();
+          setProfilePic(pic);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Error fetching profile pic:', error);
+        }
+      };
+  
+      fetchAndUpdate();
+  
+      intervalId = setInterval(fetchAndUpdate, 1000);
+    }
+  
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
+  
 
   return (
     <View style={styles.headerContainer}>

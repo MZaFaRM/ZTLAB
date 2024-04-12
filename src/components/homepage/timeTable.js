@@ -26,7 +26,6 @@ export default function TimeTable() {
   const updateTimetableData = async () => {
     try {
       const day = new Date();
-      console.log('periodIndex:', periodIndex);
       const { currentDay, currentPeriod, periodIndex: newIndex } =
         await fetchAndUpdateTimetable(day, periodIndex);
   
