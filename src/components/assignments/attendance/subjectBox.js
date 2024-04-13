@@ -10,7 +10,7 @@ import Icon from '../../icons';
 import {Colors} from '../../../constants/constants';
 import {Fonts} from '../../../constants/constants';
 import AppStyles from '../../../constants/styles';
-import {ProgressBar} from '../../homepage/progressbar';
+import {ProgressBar, calculateColor} from '../../homepage/progressbar';
 
 const AttendanceQuota = ({PresentClasses, TotalClasses}) => {
   const [target, setTarget] = useState('75');
@@ -127,6 +127,9 @@ export const SubjectBox = ({
 }) => {
   const [attendedClasses, setAttendedClasses] = useState(PresentClasses);
   const [scheduledClasses, setScheduledClasses] = useState(TotalClasses);
+  const [presentPercentage, setPresentPercentage] =
+    useState(AttendancePercentage);
+  const [dutyLeavePercentage, setDutyLeavePercentage] = useState(DutyLeaves);
 
   const handleAttendedClassesChange = value => {
     setAttendedClasses(value);
@@ -137,19 +140,25 @@ export const SubjectBox = ({
   };
 
   const clearInputs = () => {
-    if (attendedClasses === '') {
+    if (attendedClasses === '' || scheduledClasses === '') {
       setAttendedClasses(PresentClasses);
-    }
-    if (scheduledClasses === '') {
       setScheduledClasses(TotalClasses);
     }
   };
+
+  useEffect(() => {
+    setPresentPercentage(
+      Math.round((attendedClasses / scheduledClasses) * 100),
+    );
+
+    setDutyLeavePercentage(Math.round((DutyLeaves / scheduledClasses) * 100));
+  }, [attendedClasses, scheduledClasses]);
 
   return (
     <View style={[styles.SubjectBox]}>
       <View style={styles.SubjectHeadingBox}>
         <Text style={[Fonts.Body, styles.SubjectTitle]}>{SubjectTitle}</Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity>
           <Icon
             type="FontAwesome6"
             name="caret-right"
@@ -172,8 +181,15 @@ export const SubjectBox = ({
               />
               <Text style={[Fonts.Button]}>Attendance</Text>
             </View>
-            <Text style={[Fonts.Heading1, styles.Score]}>
-              {AttendancePercentage}%
+            <Text
+              style={[
+                Fonts.Heading1,
+                styles.Score,
+                {
+                  color: calculateColor(presentPercentage),
+                },
+              ]}>
+              {presentPercentage}%
             </Text>
           </View>
           <View style={[AppStyles.FlexLeft, styles.DutyLeaveBox]}>
@@ -196,7 +212,7 @@ export const SubjectBox = ({
                   {color: Colors.Grey, fontSize: 15},
                 ]}>
                 {' '}
-                {DutyLeavePercentage}%
+                {dutyLeavePercentage}%
               </Text>
             </Text>
           </View>
@@ -250,8 +266,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   Score: {
-    fontSize: 45,
-    color: Colors.Green,
+    fontSize: 40,
     fontWeight: 'bold',
   },
   SubjectBox: {

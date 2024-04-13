@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../constants/constants';
+import {normalize} from '@rneui/themed';
 
 function ProgressBar({progress, style}) {
   progress /= 100;
@@ -59,36 +60,44 @@ function ProgressBar({progress, style}) {
 
 const minValue = 0;
 const maxValue = 100;
-const colorStops = [
-  [255, 0, 0], // Red
-  [255, 255, 0], // Yellow
-  [0, 255, 0], // Green
-];
 
 function calculateColor(value) {
-  if (value >= 100) {
-    return '#00FF00';
-  } else if (value <= 0) {
-    return '#FF0000';
-  }
   // Ensure the value is within the range
-  value = Math.min(Math.max(value, minValue), maxValue);
+  normalizedValue = Math.min(Math.max(value, 0), 100);
 
-  // Calculate the position along the gradient
-  const position = (value - minValue) / (maxValue - minValue);
+  const colorStops = [
+    {color: [255, 0, 0], percentage: 0.55}, // Red for attendance < 60%
+    {color: [255, 255, 0], percentage: 0.65}, // Yellow for attendance between 60% and 75%
+    {color: [0, 255, 0], percentage: 0.75}, // Green for attendance >= 75%
+  ];
+  // Find the two closest color stops
+  let startIndex = 0;
 
-  // Determine the index of the two closest color stops
-  const index = Math.floor(position * (colorStops.length - 1));
+  while (
+    startIndex + 1 < colorStops.length &&
+    normalizedValue > colorStops[startIndex + 1].percentage * 100
+  ) {
+    startIndex++;
+  }
 
-  // Get the colors at the two closest color stops
-  const color1 = colorStops[index];
-  const color2 = colorStops[index + 1];
+  let endIndex = Math.min(startIndex + 1, colorStops.length - 1);
 
-  // Interpolate between the colors based on the position
+  // Calculate the ratio between the two color stops
+  let ratio;
+  if (startIndex === endIndex) {
+    ratio = 0;
+  } else {
+    ratio =
+      (normalizedValue - colorStops[startIndex].percentage * 100) /
+      ((colorStops[endIndex].percentage - colorStops[startIndex].percentage) *
+        100);
+  }
+
+  // Interpolate between the colors based on the ratio
   const interpolatedColor = interpolateColors(
-    color1,
-    color2,
-    position * (colorStops.length - 1) - index,
+    colorStops[startIndex].color,
+    colorStops[endIndex].color,
+    ratio,
   );
 
   // Convert RGB values to hexadecimal
