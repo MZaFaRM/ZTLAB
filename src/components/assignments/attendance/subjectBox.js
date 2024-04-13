@@ -15,63 +15,75 @@ import {ProgressBar} from '../../homepage/progressbar';
 const AttendanceQuota = ({PresentClasses, TotalClasses}) => {
   const [target, setTarget] = useState('75');
 
-  const handleInputChange = value => {
-    if (value === '' || (value < 100 && value > 0)) {
-      setTarget(value);
+  const handlePercentageChange = value => {
+    setTarget(value);
+  };
+
+  const clearInputs = () => {
+    if (target === '') {
+      setTarget('75');
     }
   };
 
   const calculateAttendance = targetPercentage => {
-    if (targetPercentage === '') {
-      return (
-        <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Grey}]}>
-          00
-        </Text>
-      );
-    }
-    const targetPercentageInt = parseInt(targetPercentage);
-
-    const calculateResult = value => {
-      if (isNaN(value) || value < 0) {
+    try {
+      if (targetPercentage === '') {
         return (
-          <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Red}]}>
-            NaN
+          <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Grey}]}>
+            00
           </Text>
         );
       }
-      return value;
-    };
+      const targetPercentageInt = parseInt(targetPercentage);
 
-    if (
-      isNaN(targetPercentageInt) ||
-      targetPercentageInt < 0 ||
-      targetPercentageInt > 100
-    ) {
-      return calculateResult();
-    }
+      const calculateResult = value => {
+        if (isNaN(value) || value < 0) {
+          return (
+            <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Red}]}>
+              NaN
+            </Text>
+          );
+        }
+        return value;
+      };
 
-    const attendancePercentage = (PresentClasses / TotalClasses) * 100;
+      if (
+        isNaN(targetPercentageInt) ||
+        targetPercentageInt < 0 ||
+        targetPercentageInt > 100
+      ) {
+        return calculateResult();
+      }
 
-    if (attendancePercentage >= targetPercentageInt) {
-      const classesCanMiss =
-        (PresentClasses * 100 - targetPercentageInt * TotalClasses) /
-        targetPercentageInt;
-      return (
-        <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Green}]}>
-          {classesCanMiss === 0
-            ? classesCanMiss
-            : `+${Math.floor(classesCanMiss)}`}
-        </Text>
-      );
-    } else {
-      const classesNeeded =
-        (targetPercentageInt * TotalClasses - PresentClasses * 100) /
-        (100 - targetPercentageInt);
+      const attendancePercentage = (PresentClasses / TotalClasses) * 100;
+
+      if (attendancePercentage >= targetPercentageInt) {
+        const classesCanMiss =
+          (PresentClasses * 100 - targetPercentageInt * TotalClasses) /
+          targetPercentageInt;
+        return (
+          <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Green}]}>
+            {classesCanMiss === 0
+              ? classesCanMiss
+              : `+${Math.floor(classesCanMiss)}`}
+          </Text>
+        );
+      } else {
+        const classesNeeded =
+          (targetPercentageInt * TotalClasses - PresentClasses * 100) /
+          (100 - targetPercentageInt);
+        return (
+          <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Red}]}>
+            {classesNeeded === 0
+              ? classesNeeded
+              : `-${Math.floor(classesNeeded)}`}
+          </Text>
+        );
+      }
+    } catch (error) {
       return (
         <Text style={[Fonts.Heading2, styles.Score, {color: Colors.Red}]}>
-          {classesNeeded === 0
-            ? classesNeeded
-            : `-${Math.floor(classesNeeded)}`}
+          NaN
         </Text>
       );
     }
@@ -87,7 +99,8 @@ const AttendanceQuota = ({PresentClasses, TotalClasses}) => {
         <TextInput
           style={[Fonts.Heading2, styles.Score, styles.LeaveQuotaInput]}
           value={target}
-          onChangeText={handleInputChange}
+          onChangeText={handlePercentageChange}
+          onEndEditing={clearInputs}
           keyboardType="numeric"
         />
         <Text
@@ -112,6 +125,26 @@ export const SubjectBox = ({
   DutyLeavePercentage,
   AttendancePercentage,
 }) => {
+  const [attendedClasses, setAttendedClasses] = useState(PresentClasses);
+  const [scheduledClasses, setScheduledClasses] = useState(TotalClasses);
+
+  const handleAttendedClassesChange = value => {
+    setAttendedClasses(value);
+  };
+
+  const handleScheduledClassesChange = value => {
+    setScheduledClasses(value);
+  };
+
+  const clearInputs = () => {
+    if (attendedClasses === '') {
+      setAttendedClasses(PresentClasses);
+    }
+    if (scheduledClasses === '') {
+      setScheduledClasses(TotalClasses);
+    }
+  };
+
   return (
     <View style={[styles.SubjectBox]}>
       <View style={styles.SubjectHeadingBox}>
@@ -179,18 +212,30 @@ export const SubjectBox = ({
               <Text style={[Fonts.Button]}>Leave Quota</Text>
             </View>
             <AttendanceQuota
-              PresentClasses={PresentClasses}
-              TotalClasses={TotalClasses}
+              PresentClasses={attendedClasses}
+              TotalClasses={scheduledClasses}
             />
           </View>
         </View>
-        <View style={{marginBottom: 10, alignItems: 'center'}}>
-          <Text style={Fonts.Body}>
-            Total classes:{' '}
-            <Text style={{fontWeight: 'bold'}}>
-              {PresentClasses} / {TotalClasses}
-            </Text>
-          </Text>
+        <View style={styles.totalClassesBox}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={Fonts.Body}>Total Classes: </Text>
+            <TextInput
+              style={styles.attendanceInput}
+              value={attendedClasses.toString()}
+              onEndEditing={clearInputs}
+              onChangeText={handleAttendedClassesChange}
+              keyboardType="numeric"
+            />
+            <Text style={styles.attendanceInput}>/</Text>
+            <TextInput
+              style={styles.attendanceInput}
+              value={scheduledClasses.toString()}
+              onEndEditing={clearInputs}
+              onChangeText={handleScheduledClassesChange}
+              keyboardType="numeric"
+            />
+          </View>
         </View>
         <ProgressBar progress={AttendancePercentage} />
       </View>
@@ -250,5 +295,17 @@ const styles = StyleSheet.create({
     padding: 0,
     textAlign: 'center',
     paddingBottom: 5,
+  },
+  attendanceInput: {
+    fontSize: 15,
+    padding: 0,
+    textAlign: 'center',
+    paddingBottom: 0,
+    color: Colors.DarkGrey,
+    fontWeight: 'bold',
+  },
+  totalClassesBox: {
+    marginBottom: 10,
+    alignItems: 'center',
   },
 });
