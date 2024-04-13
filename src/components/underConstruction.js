@@ -22,7 +22,7 @@ export const UnderConstruction = () => (
         the GitHub repository at{' '}
         <Text
           style={{color: 'blue'}}
-          onPress={() => Linking.openURL('https://github.com/MZaFaRM')}>
+          onPress={() => Linking.openURL('https://github.com/MZaFaRM/ZTLAB')}>
           ZTLAB
         </Text>
         .{'\n\n'}
