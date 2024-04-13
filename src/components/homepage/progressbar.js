@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../constants/constants';
 
 function ProgressBar({progress, style}) {
-  progress = progress / 100;
+  progress /= 100;
 
   // Calculate color based on progress
   let colors_palette = ['#FF0000', '#FF0001'];
