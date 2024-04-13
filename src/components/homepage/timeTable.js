@@ -11,6 +11,7 @@ import {Fonts} from '../../constants/constants';
 import AppStyles from '../../constants/styles';
 import Icon from '../icons';
 import fetchAndUpdateTimetable from '../../helpers/TimeTable';
+import Day from 'react-native-calendars/src/calendar/day';
 
 export default function TimeTable() {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,19 +35,21 @@ export default function TimeTable() {
   const updateTimetableData = async () => {
     try {
       const day = new Date();
-      const dayToFetch = dayIndex !== null ? dayIndex : day.getDay();
-      
-      setIsLoading(true);
-      const {
-        currentDay,
-        currentPeriod,
-        periodIndex: newIndex,
-      } = await fetchAndUpdateTimetable(day, dayToFetch, periodIndex);
-      setIsLoading(false);
+      if (day.getDay() === 0) {
+        const dayToFetch = dayIndex !== null ? dayIndex : day.getDay();
 
-      setCurrentDay(currentDay);
-      setPeriod(currentPeriod);
-      setPeriodIndex(newIndex);
+        setIsLoading(true);
+        const {
+          currentDay,
+          currentPeriod,
+          periodIndex: newIndex,
+        } = await fetchAndUpdateTimetable(day, dayToFetch, periodIndex);
+        setIsLoading(false);
+
+        setCurrentDay(currentDay);
+        setPeriod(currentPeriod);
+        setPeriodIndex(newIndex);
+      }
     } catch (error) {
       console.error('Error updating timetable data:', error);
     }
