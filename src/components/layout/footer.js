@@ -1,10 +1,7 @@
-import {useState, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Colors} from '../../constants/constants';
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Colors, pages } from '../../constants/constants';
 import Icon from '../icons';
-import {useNavigation} from '@react-navigation/native';
-import {pages} from '../../constants/constants';
-import {updateHeaders} from '../../api/src';
 
 export default function Footer({currentPage}) {
   const navigation = useNavigation();

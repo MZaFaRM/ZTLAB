@@ -13,12 +13,11 @@ import {
   ProfileItem,
   SignatureItem,
 } from '../components/sidebar/sidebar';
-import { Colors, Fonts } from '../constants/constants';
 
 import { useNavigation } from '@react-navigation/native';
 import { getSidebarUserInfo } from '../api/info';
 
-import { pages } from '../constants/constants';
+import { Colors, Fonts, pages } from '../constants/constants';
 
 import { removeAuthToken } from '../../services/AuthService';
 
@@ -43,58 +42,13 @@ const SideBar = props => {
 
   const navigation = useNavigation();
 
-  const handleChoosePhoto = () => {
-    const options = {
-      title: 'Select a Photo',
-      cancelButtonTitle: 'Cancel',
-      takePhotoButtonTitle: 'Take Photo...',
-      chooseFromLibraryButtonTitle: 'Choose from Library...',
-      mediaType: 'photo',
-      quality: 1,
-    };
-
-    ImagePicker.launchImageLibrary(options, async response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        try {
-          // Resize the image to the desired dimensions
-          const resizedImage = await ImageResizer.createResizedImage(
-            response.assets[0].uri,
-            150, // target width
-            200, // target height
-            'JPEG', // image format
-            100, // quality
-            0, // rotation
-            null, // output path (null = create a temp file)
-            false, // do not preserve metadata
-            {mode: 'contain', onlyScaleDown: true}, // resize mode options
-          );
-
-          const fileSizeInBytes = resizedImage.size;
-          const maxSizeBytes = 1 * 1024 * 1024; // 1MB in bytes
-          if (fileSizeInBytes > maxSizeBytes) {
-            console.log('Image size exceeds 1MB limit');
-            return;
-          }
-
-          console.log('Resized Image URI: ', resizedImage.uri);
-        } catch (error) {
-          console.log('Error resizing image: ', error);
-        }
-      }
-    });
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
       try {
+        setIsLoading(true);
         const response = await getSidebarUserInfo();
         const userData = response.data;
-
+        
         setProfileImg(userData.profile_pic);
         setUsername(userData.name);
         setUniRegNo(userData.uni_reg_no);
@@ -113,7 +67,7 @@ const SideBar = props => {
         setIsLoading(false);
       }
     };
-
+    
     fetchData();
   }, []);
 
@@ -143,8 +97,13 @@ const SideBar = props => {
               <TouchableOpacity
                 style={styles.iconBox}
                 // onPress={() => handleChoosePhoto()}
-                >
-                <Icon type="MaterialIcons" name="verified" size={14} color={Colors.Green} />
+              >
+                <Icon
+                  type="MaterialIcons"
+                  name="verified"
+                  size={14}
+                  color={Colors.Green}
+                />
               </TouchableOpacity>
             </View>
 
@@ -266,3 +225,43 @@ const styles = StyleSheet.create({
 });
 
 export default SideBar;
+
+// const handleChoosePhoto = () => {
+//   const options = {
+//     title: 'Select a Photo',
+//     cancelButtonTitle: 'Cancel',
+//     takePhotoButtonTitle: 'Take Photo...',
+//     chooseFromLibraryButtonTitle: 'Choose from Library...',
+//     mediaType: 'photo',
+//     quality: 1,
+//   };
+
+//   ImagePicker.launchImageLibrary(options, async response => {
+//     if (response.didCancel) {
+//       //     } else if (response.error) {
+//       //     } else {
+//       try {
+//         // Resize the image to the desired dimensions
+//         const resizedImage = await ImageResizer.createResizedImage(
+//           response.assets[0].uri,
+//           150, // target width
+//           200, // target height
+//           'JPEG', // image format
+//           100, // quality
+//           0, // rotation
+//           null, // output path (null = create a temp file)
+//           false, // do not preserve metadata
+//           {mode: 'contain', onlyScaleDown: true}, // resize mode options
+//         );
+
+//         const fileSizeInBytes = resizedImage.size;
+//         const maxSizeBytes = 1 * 1024 * 1024; // 1MB in bytes
+//         if (fileSizeInBytes > maxSizeBytes) {
+//           //           return;
+//         }
+
+//         //       } catch (error) {
+//         //       }
+//     }
+//   });
+// };

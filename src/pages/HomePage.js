@@ -16,6 +16,7 @@ import Icon from '../components/icons';
 import Layout from '../components/layout/layout';
 import {Colors, Fonts, pages} from '../constants/constants';
 import AppStyles from '../constants/styles';
+import {handleUnauthorizedAccess} from '../api/auth';
 
 export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +41,7 @@ export default function Homepage({navigation}) {
         setAttendance(userData.attendance);
       } catch (error) {
         console.error('Error fetching user info:', error);
+        handleUnauthorizedAccess(error, navigation);
       } finally {
         setIsLoading(false);
       }
@@ -49,68 +51,62 @@ export default function Homepage({navigation}) {
   }, []);
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Layout navigation={navigation} currentPage={pages.home}>
-        <ScrollView
-          contentContainerStyle={styles.Homepage}
-          showsVerticalScrollIndicator={false}>
-          {isLoading ? (
-            <Minesweeper />
-          ) : (
-            <>
-              <View style={styles.Profile}>
-                <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
-                  {username}
+    <Layout navigation={navigation} currentPage={pages.home}>
+      <ScrollView
+        contentContainerStyle={styles.Homepage}
+        showsVerticalScrollIndicator={false}>
+        {isLoading ? (
+          <Minesweeper />
+        ) : (
+          <>
+            <View style={styles.Profile}>
+              <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
+                {username}
+              </Text>
+              <Text style={[Fonts.Body]}>
+                {department} {year}
+              </Text>
+              <Text style={[Fonts.Body]}>
+                Roll No :
+                <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}>
+                  {' '}
+                  {rollNumber}
                 </Text>
-                <Text style={[Fonts.Body]}>
-                  {department} {year}
-                </Text>
-                <Text style={[Fonts.Body]}>
-                  Roll No :
-                  <Text style={[Fonts.Body, {color: Colors.DarkGrey}]}>
-                    {' '}
-                    {rollNumber}
+              </Text>
+            </View>
+            <View style={styles.Marks}>
+              <View style={styles.CGPA}>
+                <Text style={Fonts.Body}>CGPA</Text>
+                <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
+              </View>
+              <View style={styles.PrevCGPA}>
+                <Text style={Fonts.Body}>Prev - CGPA</Text>
+                <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
+              </View>
+              <View style={styles.Analysis}>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
+                  <Icon
+                    type="Entypo"
+                    name="bar-graph"
+                    size={15}
+                    color={Colors.Blue}
+                  />
+                  <Text
+                    style={[Fonts.Body, AppStyles.BlueText, {marginLeft: 10}]}>
+                    Analysis
                   </Text>
-                </Text>
+                </TouchableOpacity>
               </View>
-              <View style={styles.Marks}>
-                <View style={styles.CGPA}>
-                  <Text style={Fonts.Body}>CGPA</Text>
-                  <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
-                </View>
-                <View style={styles.PrevCGPA}>
-                  <Text style={Fonts.Body}>Prev - CGPA</Text>
-                  <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
-                </View>
-                <View style={styles.Analysis}>
-                  <TouchableOpacity
-                    onPress={() => {}}
-                    style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
-                    <Icon
-                      type="Entypo"
-                      name="bar-graph"
-                      size={15}
-                      color={Colors.Blue}
-                    />
-                    <Text
-                      style={[
-                        Fonts.Body,
-                        AppStyles.BlueText,
-                        {marginLeft: 10},
-                      ]}>
-                      Analysis
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <TimeTable />
-              <OverallAttendance attendance={attendance} />
-              <Menu />
-            </>
-          )}
-        </ScrollView>
-      </Layout>
-    </View>
+            </View>
+            <TimeTable />
+            <OverallAttendance attendance={attendance} />
+            <Menu />
+          </>
+        )}
+      </ScrollView>
+    </Layout>
   );
 }
 

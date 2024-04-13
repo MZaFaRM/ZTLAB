@@ -13,8 +13,8 @@ export default function OverallAttendance({attendance}) {
 
   if (attendance > 100) {
     attendance = 100;
-  } else if (attendance < 0) {
-    attendance = 0;
+  } else {
+    attendance = Math.max(attendance, 0)
   }
 
   return (

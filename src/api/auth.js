@@ -23,18 +23,18 @@ export const login = async (username, password) => {
 };
 
 export const handleUnauthorizedAccess = async (error, navigation) => {
-  try {
+    try {
     if (error instanceof InvalidTokenError) {
-      const userData = await AsyncStorage.getItem('userData');
+            const userData = await AsyncStorage.getItem('userData');
 
       if (userData) {
-        const userDataJson = JSON.parse(userData);
+                const userDataJson = JSON.parse(userData);
         if (userDataJson.username) {
           const response = await login(
             userDataJson.username,
             userDataJson.password,
           );
-
+          
           if (response.session_id) {
             await storeAuthToken(response.session_id);
             updateHeaders('session_id', response.session_id);
@@ -43,10 +43,10 @@ export const handleUnauthorizedAccess = async (error, navigation) => {
           }
         }
       }
-
-      navigation.replace(pages.login);
+      
+            navigation.replace(pages.login);
     } else {
-      console.error('Error:', error);
+            console.error('Error:', error);
     }
   } catch (error) {
     console.error('Error:', error);

@@ -1,39 +1,37 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 import Layout from '../components/layout/layout';
-import { Colors, Fonts, pages } from '../constants/constants';
+import {Colors, Fonts, pages} from '../constants/constants';
 
-import { UnderConstruction } from '../components/underConstruction';
+import {UnderConstruction} from '../components/underConstruction';
 
 export default function AlertsPage({navigation}) {
   const [AlertsData, setAlertsData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <View style={{flex: 1, justifyContent: 'center'}}>
-      <Layout navigation={navigation} currentPage={pages.alerts}>
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.AlertsPage}>
-            <View>
-              <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
-                Alerts
-              </Text>
-            </View>
-            <UnderConstruction />
-          </ScrollView>
-        )}
-      </Layout>
-    </View>
+    <Layout navigation={navigation} currentPage={pages.alerts}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.AlertsPage}>
+          <View>
+            <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
+              Alerts
+            </Text>
+          </View>
+          <UnderConstruction />
+        </ScrollView>
+      )}
+    </Layout>
   );
 }
 

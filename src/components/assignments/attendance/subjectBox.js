@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     flex: 1,
 
-    marginBottom: 20,
+    marginTop: 20,
   },
   SubjectHeadingBox: {
     backgroundColor: Colors.LightBlue,

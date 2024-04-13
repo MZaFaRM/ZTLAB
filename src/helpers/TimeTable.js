@@ -24,18 +24,18 @@ const isInterval = (time, interval) => {
   return isBetween(interval[0], interval[1], time);
 };
 
-const convertToDecimalTime = currentTime => {
-  const hours = currentTime.getHours();
-  const minutes = currentTime.getMinutes();
+const convertToDecimalTime = day => {
+  const hours = day.getHours();
+  const minutes = day.getMinutes();
   return hours + minutes / 60;
 };
 
-const getCurrentPeriodIndex = (currentDay, currentTime, timetable) => {
+const getCurrentPeriodIndex = (day, dayIndex, timetable) => {
   if (
     !timetable ||
     timetable.length === 0 ||
-    currentDay < 1 ||
-    currentDay > 5
+    dayIndex < 1 ||
+    dayIndex > 5
   ) {
     return -1;
   }
@@ -50,13 +50,13 @@ const getCurrentPeriodIndex = (currentDay, currentTime, timetable) => {
   };
 
   const todaysTimings =
-    currentDay === 5 ? timePeriods.friday : timePeriods.mondayToThursday;
+    dayIndex === 5 ? timePeriods.friday : timePeriods.mondayToThursday;
   const todaysInterval =
-    currentDay === 5
+    dayIndex === 5
       ? intervalTimings.friday
       : intervalTimings.mondayToThursday;
 
-  const decimalCurrentTime = convertToDecimalTime(currentTime);
+  const decimalCurrentTime = convertToDecimalTime(day);
 
   if (
     isInterval(decimalCurrentTime, todaysInterval) ||
@@ -100,9 +100,8 @@ const numberToRoman = num => {
   return result;
 };
 
-const fetchAndUpdateTimetable = async (day, periodIndex = undefined) => {
+const fetchAndUpdateTimetable = async (day, dayIndex, periodIndex = undefined) => {
   try {
-    const dayIndex = day.getDay();
     let timetable = [];
     if (dayIndex !== 0) {
       timetable = await fetchTimeTable(dayIndex);
@@ -110,7 +109,7 @@ const fetchAndUpdateTimetable = async (day, periodIndex = undefined) => {
 
     const currentPeriodIndex =
       periodIndex === -1
-        ? getCurrentPeriodIndex(dayIndex, day, timetable)
+        ? getCurrentPeriodIndex(day, dayIndex, timetable)
         : periodIndex;
 
     const currentPeriodIndexRoman = numberToRoman(currentPeriodIndex + 1);
@@ -118,9 +117,7 @@ const fetchAndUpdateTimetable = async (day, periodIndex = undefined) => {
     let currentPeriod = {};
     if (currentPeriodIndex !== -1) {
       currentPeriod = timetable.subjects[currentPeriodIndex];
-      console.log('currentPeriod:', currentPeriodIndex);
-    }
-    currentPeriod['roman'] = currentPeriodIndexRoman;
+    }    currentPeriod['roman'] = currentPeriodIndexRoman;
 
     return {
       currentDay: dayIndex,
