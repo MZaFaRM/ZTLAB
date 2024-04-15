@@ -35,7 +35,7 @@ export default function TimeTable() {
   const updateTimetableData = async () => {
     try {
       const day = new Date();
-      if (day.getDay() === 0) {
+      if (day.getDay() !== 0) {
         const dayToFetch = dayIndex !== null ? dayIndex : day.getDay();
 
         setIsLoading(true);
