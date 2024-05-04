@@ -1,6 +1,7 @@
-import { getAuthToken } from '../../services/AuthService';
-import { InvalidTokenError } from './auth';
-import { api, updateHeaders } from './src';
+import { AxiosError } from 'axios';
+import {getAuthToken} from '../../services/AuthService';
+import {InvalidTokenError} from './auth';
+import {api, updateHeaders} from './src';
 
 const fetchData = async endpoint => {
   try {
@@ -13,8 +14,7 @@ const fetchData = async endpoint => {
     if (error.response?.status === 401) {
       throw new InvalidTokenError(`Invalid token`);
     } else {
-      return false;
-      // throw new Error(`Failed to fetch data: ${JSON.stringify(error.response.data)}`);
+      throw new AxiosError(`${error.response?.data.errors}`);
     }
   }
 };
@@ -36,6 +36,9 @@ export const getSubjectWiseAttendance = async () => {
 };
 
 export const getTimeTable = async day => {
-  console.log(`/get-timetable/${day}/`);
   return await fetchData(`/get-timetable/${day}`);
+};
+
+export const getSurvey = async () => {
+  return await fetchData('/get-surveys/');
 };

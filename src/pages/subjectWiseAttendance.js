@@ -65,7 +65,7 @@ const SubjectWiseAttendance = ({navigation}) => {
   return (
     <Layout navigation={navigation} currentPage={pages.home}>
       <ScrollView
-        contentContainerStyle={styles.Homepage}
+        contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
         <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
           Attendance
@@ -90,9 +90,7 @@ const SubjectWiseAttendance = ({navigation}) => {
               <View style={styles.Analysis}>
                 <TouchableOpacity
                   onPress={() =>
-                    Linking.openURL(
-                      `https://kmctce.etlab.app/ktuacademics/student/attendance`,
-                    )
+                    navigation.push(pages.main, {screen: pages.attendanceTable})
                   }
                   style={[AppStyles.BlueButton, AppStyles.CustomButton]}>
                   <Icon
@@ -127,7 +125,7 @@ const SubjectWiseAttendance = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  Homepage: {
+  scrollContainer: {
     padding: 25,
     paddingTop: 15,
   },

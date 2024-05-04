@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, StyleSheet, Text, FlatList} from 'react-native';
-import {Colors} from '../../constants/constants';
+import {Colors, pages} from '../../constants/constants';
 import {Fonts} from '../../constants/constants';
 import AppStyles from '../../constants/styles';
+import {useNavigation} from '@react-navigation/native';
 import Icon from '../icons';
 
-const CustomDropdown = ({title, icon, options, type, isLast}) => {
+const CustomDropdown = ({title, icon, options, type, isLast, page}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigation = useNavigation();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -14,7 +16,13 @@ const CustomDropdown = ({title, icon, options, type, isLast}) => {
 
   const renderItem = ({item}) => (
     <View style={styles.OptionBox}>
-      <TouchableOpacity style={styles.Option}>
+      <TouchableOpacity
+        style={styles.Option}
+        onPress={() =>
+          item.page
+            ? navigation.push(pages.main, {screen: item.page})
+            : console.log(item.page)
+        }>
         <View style={styles.iconContainer}>
           <Icon
             type={item.type}

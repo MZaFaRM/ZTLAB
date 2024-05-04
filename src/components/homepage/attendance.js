@@ -47,7 +47,7 @@ export default function OverallAttendance({attendance}) {
           <View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate(pages.subjectWiseAttendance);
+                navigation.navigate(pages.attendanceTable);
               }}
               style={[
                 AppStyles.BlueButton,

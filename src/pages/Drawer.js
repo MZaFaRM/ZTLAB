@@ -9,6 +9,8 @@ import AssignmentsPage from './Assignments';
 import Homepage from './HomePage';
 import AlertsPage from './Alerts';
 import SubjectWiseAttendance from './SubjectWiseAttendance';
+import SurveyPage from './Survey';
+import AttendanceTable from './AttendanceTable';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,6 +37,16 @@ export const CustomDrawer = ({navigation}) => {
       <Drawer.Screen
         name={pages.subjectWiseAttendance}
         component={SubjectWiseAttendance}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen
+        name={pages.surveyPage}
+        component={SurveyPage}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen
+        name={pages.attendanceTable}
+        component={AttendanceTable}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>
