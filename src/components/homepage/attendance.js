@@ -14,7 +14,7 @@ export default function OverallAttendance({attendance}) {
   if (attendance > 100) {
     attendance = 100;
   } else {
-    attendance = Math.max(attendance, 0)
+    attendance = Math.max(attendance, 0);
   }
 
   return (
@@ -47,7 +47,9 @@ export default function OverallAttendance({attendance}) {
           <View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate(pages.attendanceTable);
+                navigation.push(pages.main, {
+                  screen: pages.subjectWiseAttendance,
+                });
               }}
               style={[
                 AppStyles.BlueButton,

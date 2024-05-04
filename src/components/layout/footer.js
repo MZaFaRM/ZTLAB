@@ -1,13 +1,13 @@
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Colors, pages } from '../../constants/constants';
+import {useNavigation} from '@react-navigation/native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Colors, pages} from '../../constants/constants';
 import Icon from '../icons';
 
 export default function Footer({currentPage}) {
   const navigation = useNavigation();
 
   const handlePageChange = page => {
-    navigation.navigate(page);
+    navigation.push(pages.main, {screen: page});
   };
 
   return (

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Fonts} from '../constants/constants';
+import {Colors, Fonts} from '../constants/constants';
 
 const SIZE = 7;
 const MINES = 5;
@@ -126,8 +126,8 @@ const Minesweeper = () => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{alignItems: 'center'}}>
+      <ActivityIndicator size="large" color={Colors.White} />
       <Text style={[Fonts.Heading1, {margin: 10}]}>Waking up the server</Text>
-      <ActivityIndicator size="large" color="#0000ff" />
       <View style={styles.funFact}>
         <Text style={[Fonts.Body, {textAlign: 'center'}]}>
           Just a heads up, this might drag on for up to a minute,{' '}

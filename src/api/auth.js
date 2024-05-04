@@ -10,11 +10,14 @@ export const login = async (username, password) => {
       username: username,
       password: password,
     });
-
-    if (response.status !== 200) {
-      throw new Error(response.data.error);
-    } else {
+    if (response.status === 200) {
       return response.data.data;
+    } else if (response.status === 401) {
+      throw new InvalidTokenError(
+        response.data?.error || 'Invalid username or password',
+      );
+    } else {
+      throw new Error(response.data?.error || `${response.status} error`);
     }
   } catch (error) {
     console.error('Error logging in:', error);
@@ -23,13 +26,13 @@ export const login = async (username, password) => {
 };
 
 export const handleUnauthorizedAccess = async (error, navigation) => {
-    try {
-    if (error instanceof InvalidTokenError) {
-            const userData = await AsyncStorage.getItem('userData');
+  if (error instanceof InvalidTokenError) {
+    const userData = await AsyncStorage.getItem('userData');
 
-      if (userData) {
-                const userDataJson = JSON.parse(userData);
-        if (userDataJson.username) {
+    if (userData) {
+      const userDataJson = JSON.parse(userData);
+      if (userDataJson.username) {
+        try {
           const response = await login(
             userDataJson.username,
             userDataJson.password,
@@ -41,16 +44,18 @@ export const handleUnauthorizedAccess = async (error, navigation) => {
             navigation.replace(pages.main);
             return;
           }
+        } catch (error) {
+          if (error instanceof InvalidTokenError) {
+            console.error('Error:', error);
+            navigation.replace(pages.login);
+            return;
+          }
         }
       }
-      
-            navigation.replace(pages.login);
-    } else {
-            console.error('Error:', error);
     }
-  } catch (error) {
+  } else {
     console.error('Error:', error);
-    navigation.replace(pages.login);
+    throw error;
   }
 };
 

@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from 'react';
+import {React, useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   Linking,
+  RefreshControl,
 } from 'react-native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {getSubjectWiseAttendance} from '../api/info';
@@ -14,6 +15,8 @@ import Layout from '../components/layout/layout';
 import {Colors, Fonts, pages} from '../constants/constants';
 import Icon from '../components/icons';
 import AppStyles from '../constants/styles';
+import {handleUnauthorizedAccess} from '../api/auth';
+import Minesweeper from './Minesweeper';
 
 const SubjectWiseAttendance = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
@@ -41,24 +44,29 @@ const SubjectWiseAttendance = ({navigation}) => {
     return Math.round((totalDutyLeaves / totalClasses) * 100);
   };
 
+  const fetchData = async () => {
+    try {
+      const data = await getSubjectWiseAttendance();
+      setAttendanceData(data.data);
+
+      const attendancePercentage = calculateAttendancePercentage(data.data);
+      setAttendancePercentage(attendancePercentage);
+
+      const dutyLeavesPercentage = calculateDutyLeavesPercentage(data.data);
+      setDutyLeaves(dutyLeavesPercentage);
+    } catch (error) {
+      console.log(error);
+      handleUnauthorizedAccess(error, navigation);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getSubjectWiseAttendance();
-        setAttendanceData(data.data);
+    fetchData();
+  }, []);
 
-        const attendancePercentage = calculateAttendancePercentage(data.data);
-        setAttendancePercentage(attendancePercentage);
-
-        const dutyLeavesPercentage = calculateDutyLeavesPercentage(data.data);
-        setDutyLeaves(dutyLeavesPercentage);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+  const onRefresh = useCallback(() => {
     fetchData();
   }, []);
 
@@ -66,12 +74,15 @@ const SubjectWiseAttendance = ({navigation}) => {
     <Layout navigation={navigation} currentPage={pages.home}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }>
         <Text style={[Fonts.Heading1, {color: Colors.DarkGrey}]}>
           Attendance
         </Text>
         {isLoading ? (
-          <ActivityIndicator size="large" color={Colors.Blue} />
+          <Minesweeper />
         ) : (
           <>
             <View style={styles.attendance}>
