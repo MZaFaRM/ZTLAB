@@ -1,5 +1,5 @@
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import React, { useEffect, useState } from 'react';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -14,19 +14,19 @@ import {
   SignatureItem,
 } from '../components/sidebar/sidebar';
 
-import { useNavigation } from '@react-navigation/native';
-import { getSidebarUserInfo } from '../api/info';
+import {useNavigation} from '@react-navigation/native';
+import {getSidebarUserInfo} from '../api/info';
 
-import { Colors, Fonts, pages } from '../constants/constants';
+import {Colors, Fonts, pages} from '../constants/constants';
 
-import { removeAuthToken } from '../../services/AuthService';
+import {removeAuthToken} from '../../services/AuthService';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from '../components/icons';
 
 import * as ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-import { handleUnauthorizedAccess } from '../api/auth';
+import {handleUnauthorizedAccess} from '../api/auth';
 
 const SideBar = props => {
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +48,7 @@ const SideBar = props => {
         setIsLoading(true);
         const response = await getSidebarUserInfo();
         const userData = response.data;
-        
+
         setProfileImg(userData.profile_pic);
         setUsername(userData.name);
         setUniRegNo(userData.uni_reg_no);
@@ -67,7 +67,7 @@ const SideBar = props => {
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 

@@ -1,13 +1,13 @@
-import {React, useEffect, useState} from 'react';
+import {React, useCallback, useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Minesweeper from './Minesweeper';
 import {ScrollView} from 'react-native-virtualized-view';
+import {handleUnauthorizedAccess} from '../api/auth';
 import {getUserInfo} from '../api/info';
 import OverallAttendance from '../components/homepage/attendance';
 import Menu from '../components/homepage/menu';
@@ -16,7 +16,7 @@ import Icon from '../components/icons';
 import Layout from '../components/layout/layout';
 import {Colors, Fonts, pages} from '../constants/constants';
 import AppStyles from '../constants/styles';
-import {handleUnauthorizedAccess} from '../api/auth';
+import Minesweeper from './Minesweeper';
 
 export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,26 +27,30 @@ export default function Homepage({navigation}) {
   const [rollNumber, setRollNumber] = useState('');
   const [attendance, setAttendance] = useState('');
 
+  const fetchData = async () => {
+    try {
+      const response = await getUserInfo();
+      const userData = response.data;
+
+      setUsername(userData.name);
+      setDepartment(userData.department);
+      setYear(userData.year);
+      setRollNumber(userData.roll_number);
+      setAttendance(userData.attendance);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      handleUnauthorizedAccess(error, navigation);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await getUserInfo();
-        const userData = response.data;
+    setIsLoading(true);
+    fetchData();
+  }, []);
 
-        setUsername(userData.name);
-        setDepartment(userData.department);
-        setYear(userData.year);
-        setRollNumber(userData.roll_number);
-        setAttendance(userData.attendance);
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-        handleUnauthorizedAccess(error, navigation);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
+  const onRefresh = useCallback(() => {
     fetchData();
   }, []);
 
@@ -54,7 +58,10 @@ export default function Homepage({navigation}) {
     <Layout navigation={navigation} currentPage={pages.home}>
       <ScrollView
         contentContainerStyle={styles.Homepage}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }>
         {isLoading ? (
           <Minesweeper />
         ) : (
