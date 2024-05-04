@@ -36,7 +36,7 @@
     "react-native-table-component": "^1.2.2",
     "react-native-vector-icons": "^10.0.3",
     "react-native-virtualized-view": "^1.0.0",
-    "react-native-webview": "^11.23.1"
+    "react-native-webview": "^13.8.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

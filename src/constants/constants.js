@@ -44,6 +44,8 @@ export const pages = {
   main: 'Main',
   alerts: 'alerts',
   subjectWiseAttendance: 'SubjectWiseAttendance',
+  surveyPage: 'SurveyPage',
+  attendanceTable: 'AttendanceTable',
 };
 
 export const etlabPages = {

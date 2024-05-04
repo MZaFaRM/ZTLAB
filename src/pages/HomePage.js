@@ -77,11 +77,11 @@ export default function Homepage({navigation}) {
             <View style={styles.Marks}>
               <View style={styles.CGPA}>
                 <Text style={Fonts.Body}>CGPA</Text>
-                <Text style={[Fonts.Heading2, styles.Score]}>9.12</Text>
+                <Text style={[Fonts.Heading2, styles.Score]}>6.52</Text>
               </View>
               <View style={styles.PrevCGPA}>
                 <Text style={Fonts.Body}>Prev - CGPA</Text>
-                <Text style={[Fonts.Heading2, styles.Score]}>9.57</Text>
+                <Text style={[Fonts.Heading2, styles.Score]}>6.10</Text>
               </View>
               <View style={styles.Analysis}>
                 <TouchableOpacity
