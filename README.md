@@ -14,6 +14,19 @@ This is a React Native-based mobile app designed to enhance the usability and fu
 - **🚀 FastAPI:** Backend for handling requests and managing interactions with the ETLAB platform.
 - **🌐 Render (Hosting Service):** Hosting the backend for the app.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="./src/assets/images/readme/screenshot_1.jpeg" alt="App Screenshot 1" width="300"/></td>
+    <td><img src="./src/assets/images/readme/screenshot_2.jpeg" alt="App Screenshot 2" width="300"/></td>
+  </tr>
+  <tr>
+    <td><img src="./src/assets/images/readme/screenshot_3.jpeg" alt="App Screenshot 3" width="300"/></td>
+    <td><img src="./src/assets/images/readme/screenshot_4.jpeg" alt="App Screenshot 4" width="300"/></td>
+  </tr>
+</table>
+
 ## ⚡ Performance Considerations
 
 One challenge is that the backend runs on a free Render hosting server. When inactive for over an hour, the server spins down, leading to a delay of up to a minute and a half for the first request when it's being restarted. ⏳ While this setback affects initial load times, subsequent requests are processed efficiently.
